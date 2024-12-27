@@ -1,0 +1,30 @@
+version: '3'
+services:
+  reminder-front:
+    image: alexv31/reminder:front
+    networks:
+      - reminder-network
+    ports:
+      - "3006:80"
+      - "3007:443"
+
+  reminder-back:
+    image: alexv31/reminder:back
+    environment:
+      - NODE_ENV=production
+      - PORT=80
+      - ALLOWED_ORIGIN=https://reminder.alexandre-vernet.fr
+      - POSTGRES_HOST=
+      - POSTGRES_PORT=
+      - POSTGRES_USERNAME=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DATABASE=
+    networks:
+      - reminder-network
+    ports:
+      - "4006:80"
+      - "4007:443"
+
+networks:
+  reminder-network:
+    driver: bridge
