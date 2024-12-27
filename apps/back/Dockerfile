@@ -8,6 +8,6 @@ RUN npm install --production
 
 COPY . .
 
-RUN npm run build:api
+RUN npm run build:back
 
 CMD ["node", "dist/apps/back/main.js"]

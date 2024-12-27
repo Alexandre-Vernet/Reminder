@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:front": "npx nx serve front",
-    "start:back": "npx nx serve back"
+    "start:front": "nx serve front",
+    "start:back": "nx serve back",
+    "build:front": "nx build front",
+    "build:back": "nx build back"
   },
   "private": true,
   "dependencies": {

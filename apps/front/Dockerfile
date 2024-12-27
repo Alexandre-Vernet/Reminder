@@ -8,7 +8,7 @@ RUN npm install --production
 
 COPY . .
 
-RUN npm run build:app
+RUN npm run build:front
 
 
 FROM nginx:alpine
