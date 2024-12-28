@@ -1,12 +1,12 @@
 {
-  "name": "@reminder/source",
+  "name": "reminder",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "start:front": "nx serve front",
     "start:back": "nx serve back",
-    "build:front": "nx build front",
-    "build:back": "nx build back"
+    "build:front": "nx build front --verbose",
+    "build:back": "nx build back --verbose"
   },
   "private": true,
   "dependencies": {

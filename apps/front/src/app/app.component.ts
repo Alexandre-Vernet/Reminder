@@ -18,11 +18,17 @@ export class AppComponent implements OnInit {
     private readonly sw: SwPush,
   ) {
     if (environment.production) {
-    this.sw.requestSubscription({
-      serverPublicKey: environment.serverPublicKey
-    }).then(sub => console.log(sub))
-      .catch(err => console.error(err));
+      this.sw.requestSubscription({
+        serverPublicKey: environment.serverPublicKey
+      }).then(sub => console.log(JSON.stringify(sub)))
+        .catch(err => console.error(err));
     }
+
+    this.sw.messages.subscribe(msg => console.log(msg));
+    this.sw.notificationClicks.subscribe(({action, notification}) => {
+      window.open(notification.data.url);
+      fetch('');
+    });
   }
 
   ngOnInit() {
