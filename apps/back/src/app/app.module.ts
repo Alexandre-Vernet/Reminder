@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import {NotificationService} from "./notification/notification.service";
+import {ScheduleModule} from "@nestjs/schedule";
+import * as webPush from "web-push";
 
 @Module({
-  imports: [],
+  imports: [ScheduleModule.forRoot()],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [NotificationService],
 })
-export class AppModule {}
+export class AppModule {
+}

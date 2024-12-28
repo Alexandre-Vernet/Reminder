@@ -2,6 +2,7 @@ version: '3'
 services:
   reminder-front:
     image: alexv31/reminder:front
+    restart: always
     networks:
       - reminder-network
     ports:
@@ -10,10 +11,17 @@ services:
 
   reminder-back:
     image: alexv31/reminder:back
+    restart: always
     environment:
       - NODE_ENV=production
-      - PORT=80
-      - ALLOWED_ORIGIN=https://reminder.alexandre-vernet.fr
+      - PORT=
+      - ALLOWED_ORIGIN=
+      - WEB_PUSH_PUBLIC_KEY=
+      - WEB_PUSH_PRIVATE_KEY=
+      - WEB_PUSH_EMAIL=
+      - WEB_PUSH_ENDPOINT=
+      - WEB_PUSH_P_256_DH=
+      - WEB_PUSH_AUTH=
       - POSTGRES_HOST=
       - POSTGRES_PORT=
       - POSTGRES_USERNAME=

@@ -1,0 +1,12 @@
+node_modules
+dist
+.angular
+.idea
+.env
+.env.example
+.gitignore
+.prettierrc
+.prettierignore
+eslint.config.cjs
+jest.config.ts
+jest.preset.js
