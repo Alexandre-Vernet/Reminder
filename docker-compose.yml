@@ -12,6 +12,8 @@ services:
   reminder-back:
     image: alexv31/reminder:back
     restart: always
+    depends_on:
+        - reminder-db
     environment:
       - NODE_ENV=production
       - PORT=
@@ -32,6 +34,22 @@ services:
     ports:
       - "4006:80"
       - "4007:443"
+
+  reminder-db:
+    image: postgres
+    restart: always
+    networks:
+      - reminder-network
+    environment:
+      - POSTGRES_DB=
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+    ports:
+      - "5006:5432"
+      - "5007:443"
+
+volumes:
+  postgres_data:
 
 networks:
   reminder-network:
