@@ -6,6 +6,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "./user/user.entity";
 import { NotificationEntity } from "./notification/notification.entity";
 import { SubscriptionEntity } from "./subscription/subscription.entity";
+import { SubscriptionModule } from "./subscription/subscription.module";
+import process from 'node:process';
+
 
 const {
 	POSTGRES_HOST,
@@ -28,6 +31,7 @@ const {
 			entities: [UserEntity, NotificationEntity, SubscriptionEntity],
 			synchronize: true,
 		}),
+		SubscriptionModule,
 	],
 	controllers: [AppController],
 	providers: [NotificationService],

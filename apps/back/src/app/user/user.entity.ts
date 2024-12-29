@@ -16,9 +16,9 @@ export class UserEntity {
 	@Column()
 	password: string;
 
-	@Column({ name: 'updated_at', type: 'timestamp' })
+	@Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
 	updatedAt: Date;
 
-	@Column({ name: 'created_at', type: 'timestamp' })
+	@Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
 	createdAt: Date;
 }

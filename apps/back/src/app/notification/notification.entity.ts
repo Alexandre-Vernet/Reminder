@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { SubscriptionEntity } from "../subscription/subscription.entity";
 import { UserEntity } from "../user/user.entity";
 
@@ -12,8 +12,9 @@ export class NotificationEntity {
 	@JoinColumn({ name: 'user_id' })
 	user: UserEntity;
 
-	@OneToMany(() => SubscriptionEntity, subscription => subscription.id)
-	subscriptions: SubscriptionEntity[];
+	@ManyToOne(() => SubscriptionEntity, notification => notification.id)
+	@JoinColumn({ name: 'subscription_id' })
+	subscription: SubscriptionEntity;
 
 	@Column()
 	name: string;
@@ -30,9 +31,9 @@ export class NotificationEntity {
 	@Column()
 	description: string;
 
-	@Column({ name: 'updated_at', type: 'timestamp' })
+	@Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
 	updatedAt: Date;
 
-	@Column({ name: 'created_at', type: 'timestamp' })
+	@Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
 	createdAt: Date;
 }
