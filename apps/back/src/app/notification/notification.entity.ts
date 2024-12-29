@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { SubscriptionEntity } from "../subscription/subscription.entity";
-import { UserEntity } from "../user/user.entity";
+import { UserEntity } from "../auth/user.entity";
 
 @Entity('notification', { schema: 'public' })
 export class NotificationEntity {
