@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { NotificationService } from "./notification/notification.service";
 import { ScheduleModule } from "@nestjs/schedule";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "./user/user.entity";
@@ -8,7 +6,6 @@ import { NotificationEntity } from "./notification/notification.entity";
 import { SubscriptionEntity } from "./subscription/subscription.entity";
 import { SubscriptionModule } from "./subscription/subscription.module";
 import process from 'node:process';
-
 
 const {
 	POSTGRES_HOST,
@@ -33,8 +30,6 @@ const {
 		}),
 		SubscriptionModule,
 	],
-	controllers: [AppController],
-	providers: [NotificationService],
 })
 export class AppModule {
 }
