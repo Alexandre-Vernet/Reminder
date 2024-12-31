@@ -1,0 +1,20 @@
+<div class="center">
+	<form (ngSubmit)="buttonSubmitForm$.next()" [formGroup]="formSignIn">
+		<div pFocusTrap class="w-full sm:w-80 flex flex-col gap-6 m-4">
+
+			<!--Email-->
+			<p-floatlabel>
+				<input id="username" pInputText formControlName="email" [pAutoFocus]="true" />
+				<label for="username">Username</label>
+			</p-floatlabel>
+
+			<!--Password-->
+			<p-floatlabel>
+				<input id="password" pInputText type="password" formControlName="password" />
+				<label for="username">Password</label>
+			</p-floatlabel>
+
+			<p-button [disabled]="formSignIn.invalid" type="submit" label="Submit" class="mt-2" styleClass="w-full"/>
+		</div>
+	</form>
+</div>

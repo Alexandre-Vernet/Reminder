@@ -18,7 +18,6 @@ export class AppComponent implements OnInit {
 		private readonly sw: SwPush,
 	) {
 		if (environment.production) {
-
 			this.sw.requestSubscription({
 				serverPublicKey: environment.serverPublicKey
 			}).then(sub => {

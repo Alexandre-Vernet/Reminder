@@ -6,6 +6,9 @@ import {appRoutes} from "./app/app.routes";
 import {provideHttpClient} from "@angular/common/http";
 import {provideServiceWorker} from "@angular/service-worker";
 import {environment} from "./environments/environment";
+import { providePrimeNG } from "primeng/config";
+import Aura from '@primeng/themes/aura';
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -16,7 +19,18 @@ bootstrapApplication(AppComponent, {
       registrationStrategy: 'registerWhenStable:30000',
       enabled: environment.production,
     }),
-  ],
+		provideAnimationsAsync(),
+		providePrimeNG({
+			theme: {
+				preset: Aura,
+				options: {
+					prefix: 'p',
+					darkModeSelector: 'p-light',
+					cssLayer: false
+				}
+			}
+		}),
+	],
 }).catch((err) =>
   console.error(err)
 );
