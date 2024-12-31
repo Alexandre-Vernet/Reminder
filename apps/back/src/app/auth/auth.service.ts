@@ -58,6 +58,30 @@ export class AuthService {
 		};
 	}
 
+	async signInWithAccessToken(accessToken: string) {
+		return this.jwtService.verifyAsync(accessToken)
+			.then(async (decoded) => {
+				const user = await this.userRepository.findOne({
+					where: {
+						id: decoded.user.id,
+						email: decoded.user.email,
+						password: decoded.user.password
+					}
+				});
+				if (!user) {
+					throw new ConflictException('Invalid credentials');
+				}
+				delete user.password;
+				return {
+					accessToken: await this.jwtService.signAsync({ user }),
+					user
+				};
+			})
+			.catch(() => {
+				throw new ConflictException('Your session has expired. Please sign in again.');
+			});
+	}
+
 	update(id: number, user: User) {
 		return this.userRepository.update(id, user);
 	}
