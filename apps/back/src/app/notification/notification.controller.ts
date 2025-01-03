@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors, } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { NotificationDto, UserDto } from "../../../../libs/interfaces";
+import { AuthInterceptor } from "../auth/auth.interceptor";
 
+@UseInterceptors(AuthInterceptor)
 @Controller('notification')
 export class NotificationController {
 	constructor(private readonly notificationService: NotificationService) {

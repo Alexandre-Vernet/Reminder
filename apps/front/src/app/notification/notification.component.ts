@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { Table, TableModule } from "primeng/table";
-import { Select } from "primeng/select";
 import { Button } from "primeng/button";
 import { Toast } from "primeng/toast";
 import { Toolbar } from "primeng/toolbar";
-import { FileUpload } from "primeng/fileupload";
 import { ConfirmDialog } from "primeng/confirmdialog";
 import { IconField } from "primeng/iconfield";
 import { InputIcon } from "primeng/inputicon";
@@ -23,12 +21,9 @@ import { Tag } from "primeng/tag";
 		CommonModule,
 		TableModule,
 		FormsModule,
-		Select,
-		NgIf,
 		Toast,
 		Toolbar,
 		Button,
-		FileUpload,
 		ConfirmDialog,
 		IconField,
 		InputIcon,
