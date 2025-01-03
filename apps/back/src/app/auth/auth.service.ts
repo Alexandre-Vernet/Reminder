@@ -71,12 +71,12 @@ export class AuthService {
 				}
 				delete user.password;
 				return {
+					id: user.id,
+					email: user.email,
 					accessToken: await this.jwtService.signAsync({ user }),
-					user
 				};
 			})
-			.catch((e) => {
-				console.log(e);
+			.catch(() => {
 				throw new ConflictException('Your session has expired. Please sign in again.');
 			});
 	}

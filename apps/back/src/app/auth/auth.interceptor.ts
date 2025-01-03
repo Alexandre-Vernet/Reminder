@@ -26,8 +26,8 @@ export class AuthInterceptor implements NestInterceptor {
 			return of(null);
 		}
 
-		const { user } = await this.authService.signInWithAccessToken(token);
-		if (!user) {
+		const { id, email, accessToken } = await this.authService.signInWithAccessToken(token);
+		if (!id || !email || !accessToken) {
 			returnUnauthorized(context, 'Your session has expired. Please sign in again.');
 			return of(null);
 		}

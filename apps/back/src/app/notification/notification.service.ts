@@ -1,11 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { Cron } from "@nestjs/schedule";
 import * as webPush from 'web-push';
 import process from 'node:process';
+import { InjectRepository } from "@nestjs/typeorm";
+import { FindManyOptions, Repository } from "typeorm";
+import { NotificationEntity } from "./notification.entity";
+import { NotificationDto, UserDto } from "../../../../libs/interfaces";
 
 
 @Injectable()
 export class NotificationService {
+
+	constructor(
+		@InjectRepository(NotificationEntity)
+		private notificationRepository: Repository<NotificationEntity>
+	) {
+	}
+
+	createNotification(notification: NotificationDto, user: UserDto) {
+		notification.status = true;
+		notification.user = user;
+		return this.notificationRepository.save(notification);
+	}
+
+	findAll(userId: number) {
+		const options: FindManyOptions = {
+			where: {
+				user: {
+					id: userId
+				}
+			}
+		}
+		return this.notificationRepository.find(options);
+	}
+
+	update(notificationId: number, notification: NotificationDto) {
+		return this.notificationRepository.update(notificationId, notification);
+	}
+
+	delete(notificationId: number) {
+		return this.notificationRepository.delete(notificationId);
+	}
 
 	// @Cron('0 20 * * *')
 	// @Cron('* * * * * *')
