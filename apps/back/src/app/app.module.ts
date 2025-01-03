@@ -6,8 +6,9 @@ import { SubscriptionEntity } from './subscription/subscription.entity';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { AuthModule } from './auth/auth.module';
 import process from 'node:process';
-import { UserEntity } from "./auth/user.entity";
-import { JwtModule } from "@nestjs/jwt";
+import { UserEntity } from './auth/user.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { NotificationModule } from './notification/notification.module';
 
 const {
 	POSTGRES_HOST,
@@ -15,7 +16,7 @@ const {
 	POSTGRES_USERNAME,
 	POSTGRES_PASSWORD,
 	POSTGRES_DATABASE,
-	JWT_SECRET
+	JWT_SECRET,
 } = process.env;
 
 @Module({
@@ -34,10 +35,11 @@ const {
 		JwtModule.register({
 			global: true,
 			secret: JWT_SECRET,
-			signOptions: { expiresIn: '1d' }
+			signOptions: { expiresIn: '1d' },
 		}),
 		SubscriptionModule,
 		AuthModule,
+		NotificationModule,
 	],
 })
 export class AppModule {}

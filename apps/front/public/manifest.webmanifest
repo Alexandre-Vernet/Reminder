@@ -1,6 +1,6 @@
 {
-  "name": "Reminder",
-  "short_name": "Reminder",
+  "name": "Notification",
+  "short_name": "Notification",
   "theme_color": "#ffcf2c",
   "background_color": "#ff5d00",
   "display": "standalone",
