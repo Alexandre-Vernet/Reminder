@@ -12,7 +12,7 @@ export class NotificationEntity {
 	@JoinColumn({ name: 'user_id' })
 	user: UserEntity;
 
-	@ManyToOne(() => SubscriptionEntity, notification => notification.id)
+	@ManyToOne(() => SubscriptionEntity, notification => notification.id, {cascade: true, eager: true})
 	@JoinColumn({ name: 'subscription_id' })
 	subscription: SubscriptionEntity;
 

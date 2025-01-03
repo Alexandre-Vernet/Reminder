@@ -1,0 +1,152 @@
+<div class="card">
+	<p-toast/>
+	<p-toolbar styleClass="mb-6">
+		<ng-template #start>
+			<p-button label="New" icon="pi pi-plus" class="mr-2" (onClick)="showDialogCreateNotification()"/>
+			<p-button severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()"
+								[disabled]="!selectedNotification || !selectedNotification.length"/>
+		</ng-template>
+	</p-toolbar>
+
+	<p-table
+		#dt
+		[value]="notifications"
+		[rows]="10"
+		[paginator]="true"
+		[globalFilterFields]="['name', 'title', 'description', 'status']"
+		[tableStyle]="{ 'min-width': '75rem' }"
+		[(selection)]="selectedNotification"
+		[rowHover]="true"
+		dataKey="id"
+		currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+		[showCurrentPageReport]="true"
+	>
+		<ng-template #caption>
+			<div class="flex items-center justify-between">
+				<h5 class="m-0">Manage Reminders</h5>
+				<p-iconfield>
+					<p-inputicon styleClass="pi pi-search"/>
+					<input pInputText type="text" (input)="filter($event)" placeholder="Search..."/>
+				</p-iconfield>
+			</div>
+		</ng-template>
+		<ng-template #header>
+			<tr>
+				<th style="width: 3rem">
+					<p-tableHeaderCheckbox/>
+				</th>
+
+				<th pSortableColumn="name" class="big-cell">
+					Name
+					<p-sortIcon field="name"/>
+				</th>
+
+				<th pSortableColumn="cron" class="small-cell">
+					Cron
+					<p-sortIcon field="cron"/>
+				</th>
+
+				<th pSortableColumn="status" class="small-cell">
+					Status
+					<p-sortIcon field="status"/>
+				</th>
+
+				<th class="small-cell">
+					Title
+				</th>
+
+				<th class="small-cell">
+					Description
+				</th>
+
+				<th pSortableColumn="createdAt" class="big-cell">
+					Date
+					<p-sortIcon field="createdAt"/>
+				</th>
+				<th style="min-width: 12rem"></th>
+			</tr>
+		</ng-template>
+		<ng-template #body let-notification>
+			<tr>
+				<td style="width: 3rem">
+					<p-tableCheckbox [value]="notification"/>
+				</td>
+
+				<td class="big-cell">
+					{{ notification.name }}
+				</td>
+
+				<td class="small-cell">
+					{{ notification.cron }}
+				</td>
+
+				<td class="small-cell">
+					<p-tag [value]="notification.status" [severity]="getSeverity(notification.status)"/>
+				</td>
+
+				<td class="big-cell">
+					{{ notification.title }}
+				</td>
+
+				<td class="big-cell">
+					{{ notification.description }}
+				</td>
+
+				<td class="big-cell">
+					{{ notification.createdAt | date:'dd-MM-YYYY | HH:mm:ss' }}
+				</td>
+
+				<td>
+					<p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
+										(click)="showDialogUpdateNotification(notification)"/>
+					<p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
+										(click)="showDialogDeleteNotification(notification)"/>
+				</td>
+			</tr>
+		</ng-template>
+	</p-table>
+
+	<p-dialog [(visible)]="notificationDialog" [style]="{ width: '450px' }" header="Create notification" [modal]="true">
+		<ng-template #content>
+			<form [formGroup]="formGroupCreateNotification">
+				<div class="flex flex-col gap-6">
+					<div>
+						<label for="name" class="block font-bold mb-3">
+							Name
+						</label>
+						<input type="text" pInputText id="name" formControlName="name" required autofocus fluid/>
+					</div>
+
+					<div>
+						<label for="cron" class="block font-bold mb-3">
+							Cron
+						</label>
+						<input type="text" pInputText id="cron" formControlName="cron" required autofocus fluid/>
+					</div>
+
+					<div>
+						<label for="title" class="block font-bold mb-3">
+							Notification title
+						</label>
+						<input type="text" pInputText id="title" formControlName="title" required autofocus fluid/>
+					</div>
+
+					<div>
+						<label for="description" class="block font-bold mb-3">
+							Notification description
+						</label>
+						<input type="text" pInputText id="description" formControlName="description" required autofocus fluid/>
+					</div>
+				</div>
+			</form>
+		</ng-template>
+
+		<ng-template #footer>
+			<p-button label="Cancel" icon="pi pi-times" text (click)="hideDialogCreateNotification()"/>
+			<p-button label="Save" [disabled]="formGroupCreateNotification.invalid" icon="pi pi-check"
+								(click)="createNotification()"/>
+		</ng-template>
+	</p-dialog>
+
+	<p-confirmDialog [style]="{ width: '450px' }"/>
+</div>

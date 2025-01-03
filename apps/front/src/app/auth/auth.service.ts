@@ -1,35 +1,52 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, tap } from "rxjs";
+import { BehaviorSubject, Observable, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
-import { User } from "../../../../libs/interfaces";
+import { UserDto } from "../../../../libs/interfaces";
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AuthService {
 
-	authUri = environment.authUri();
+	authUrl = environment.authUri();
 
-	private userSubject: Subject<User> = new Subject<User>();
-	user: Observable<User> = this.userSubject.asObservable();
+	private userSubject: BehaviorSubject<UserDto> = new BehaviorSubject<UserDto>(null);
+	user: Observable<UserDto> = this.userSubject.asObservable();
 
 	constructor(
 		private readonly http: HttpClient,
 	) {
 	}
 
-	signUp(email: string, password: string): Observable<User> {
-		return this.http.post<User>(`${ this.authUri }/sign-up`, { email, password })
+	getUser() {
+		return this.userSubject.value;
+	}
+
+	signUp(email: string, password: string): Observable<UserDto> {
+		return this.http.post<UserDto>(`${ this.authUrl }/sign-up`, { email, password })
 			.pipe(
-				tap(user => this.userSubject.next(user))
+				tap(user => this.setUser(user)),
 			);
 	}
 
-	signIn(email: string, password: string): Observable<User> {
-		return this.http.post<User>(`${ this.authUri }/sign-in`, { email, password })
+	signIn(email: string, password: string): Observable<UserDto> {
+		return this.http.post<UserDto>(`${ this.authUrl }/sign-in`, { email, password })
 			.pipe(
-				tap(user => this.userSubject.next(user))
+				tap(user => this.setUser(user)),
 			);
+	}
+
+	signInWithAccessToken(): Observable<UserDto> {
+		const accessToken = localStorage.getItem('accessToken');
+		return this.http.post<UserDto>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
+			.pipe(
+				tap(user => this.setUser(user)),
+			);
+	}
+
+	private setUser(user: UserDto) {
+		localStorage.setItem('accessToken', user.accessToken);
+		this.userSubject.next(user);
 	}
 }

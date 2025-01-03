@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { User } from "../../../../libs/interfaces";
+import { UserDto } from "../../../../libs/interfaces";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "./user.entity";
 import { FindOneOptions, Repository } from "typeorm";
@@ -15,7 +15,7 @@ export class AuthService {
 	) {
 	}
 
-	async signUp(user: User) {
+	async signUp(user: UserDto) {
 		const option: FindOneOptions = {
 			where: {
 				email: user.email
@@ -32,11 +32,10 @@ export class AuthService {
 		return await this.userRepository.findOne(option) ?? await this.userRepository.save(user);
 	}
 
-	async signIn(user: User) {
+	async signIn(user: UserDto) {
 		const option: FindOneOptions = {
 			where: {
 				email: user.email,
-				password: user.password
 			}
 		};
 
@@ -50,11 +49,10 @@ export class AuthService {
 			throw new ConflictException('Invalid credentials');
 		}
 
-		delete userFound.password;
-
 		return {
-			accessToken: await this.jwtService.signAsync({ userFound }),
-			user: userFound
+			id: userFound.id,
+			email: userFound.email,
+			accessToken: await this.jwtService.signAsync({ user: userFound })
 		};
 	}
 
@@ -73,8 +71,9 @@ export class AuthService {
 				}
 				delete user.password;
 				return {
+					id: user.id,
+					email: user.email,
 					accessToken: await this.jwtService.signAsync({ user }),
-					user
 				};
 			})
 			.catch(() => {
@@ -82,7 +81,7 @@ export class AuthService {
 			});
 	}
 
-	update(id: number, user: User) {
+	update(id: number, user: UserDto) {
 		return this.userRepository.update(id, user);
 	}
 
