@@ -9,6 +9,7 @@ import process from 'node:process';
 import { UserEntity } from './auth/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { NotificationModule } from './notification/notification.module';
+import { CronModule } from './cron/cron.module';
 
 const {
 	POSTGRES_HOST,
@@ -40,6 +41,7 @@ const {
 		SubscriptionModule,
 		AuthModule,
 		NotificationModule,
+		CronModule,
 	],
 })
 export class AppModule {}

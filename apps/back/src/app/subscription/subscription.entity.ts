@@ -1,14 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { NotificationEntity } from "../notification/notification.entity";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { UserEntity } from "../auth/user.entity";
 
 @Entity('subscription', { schema: 'public' })
 export class SubscriptionEntity {
-
 	@PrimaryGeneratedColumn('increment')
 	id: number;
 
-	@OneToMany(() => NotificationEntity, notification => notification.id)
-	notifications: NotificationEntity[];
+	@ManyToOne(() => UserEntity, user => user.notifications)
+	@JoinColumn({ name: 'user_id' })
+	user: UserEntity;
 
 	@Column()
 	endpoint: string;

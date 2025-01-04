@@ -3,11 +3,10 @@ import { NotificationEntity } from "../notification/notification.entity";
 
 @Entity('user', { schema: 'public' })
 export class UserEntity {
-
 	@PrimaryGeneratedColumn('increment')
 	id: number;
 
-	@OneToMany(() => NotificationEntity, notification => notification.id)
+	@OneToMany(() => NotificationEntity, notification => notification.user)
 	notifications: NotificationEntity[];
 
 	@Column()

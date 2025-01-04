@@ -25,7 +25,7 @@ export class NotificationService {
 	}
 
 	getNotifications() {
-		return this.http.get<NotificationDto[]>(`${ this.notificationUri }/`, { params: { userId: this.authService.getUser().id } })
+		return this.http.get<NotificationDto[]>(this.notificationUri, { params: { userId: this.authService.getUser().id } })
 			.pipe(
 				map((notifications: NotificationDto[]) => this.notificationsSubject.next(notifications))
 			).subscribe();
@@ -33,14 +33,14 @@ export class NotificationService {
 
 	createNotification(notification: NotificationDto) {
 		const user = this.authService.getUser();
-		return this.http.post<NotificationDto>(`${ this.notificationUri }/`, { notification, user })
+		return this.http.post<NotificationDto>(this.notificationUri, { notification, user })
 			.pipe(
 				map((notification: NotificationDto) => this.notificationsSubject.next([notification, ...this.notificationsSubject.value]))
 			)
 	}
 
 	updateNotification(notification: NotificationDto) {
-		return this.http.patch<NotificationDto>(`${this.notificationUri}/${notification.id}`, { notification })
+		return this.http.patch<NotificationDto>(`${ this.notificationUri }/${ notification.id }`, { notification })
 			.pipe(
 				map((updatedNotification: NotificationDto) => {
 					const updatedNotifications = this.notificationsSubject.value.map(e =>

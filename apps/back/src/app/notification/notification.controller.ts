@@ -16,7 +16,7 @@ export class NotificationController {
 
 	@Get()
 	findAll(@Query('userId') userId: number) {
-		return this.notificationService.findAll(userId);
+		return this.notificationService.findAllByUserId(userId);
 	}
 
 	@Patch(':id')
