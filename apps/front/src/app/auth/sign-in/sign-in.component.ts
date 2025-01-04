@@ -34,6 +34,10 @@ export class SignInComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.authService.signInWithAccessToken()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe(() => this.router.navigate(['/']));
+
 		this.buttonSubmitForm$.pipe(
 			takeUntil(this.unsubscribe$),
 			filter(() => this.formSignIn.valid),
