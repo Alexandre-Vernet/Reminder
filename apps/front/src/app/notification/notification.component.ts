@@ -16,6 +16,8 @@ import { NotificationService } from "./notification.service";
 import { Tag } from "primeng/tag";
 import { Select } from "primeng/select";
 import { Subject, takeUntil } from "rxjs";
+import { cronFormatValidator } from "../validators/cronFormatValidator";
+import { cronPartsLengthValidator } from "../validators/cronPartsLengthValidator";
 
 @Component({
 	selector: 'app-reminder',
@@ -48,8 +50,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
 	selectedNotification!: NotificationDto[] | null;
 
-	submitted: boolean = false;
-
 	status = [
 		{
 			label: 'Active',
@@ -64,7 +64,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 	formGroupCreateNotification = new FormGroup({
 		id: new FormControl<string>(''),
 		name: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		cron: new FormControl<string>('', [Validators.required, Validators.minLength(9), Validators.maxLength(11)]),
+		cron: new FormControl<string>('', [Validators.required, Validators.maxLength(60), cronPartsLengthValidator(), cronFormatValidator()]),
 		status: new FormControl<boolean>(false, [Validators.required]),
 		title: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
 		description: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
