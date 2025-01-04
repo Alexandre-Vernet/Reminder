@@ -5,3 +5,13 @@
 .small-cell {
 	min-width:10rem;
 }
+
+.text-red-500 {
+	color: #f56565;
+	font-size: 11px;
+}
+
+.error-message {
+	display: flex;
+	flex-direction: column;
+}

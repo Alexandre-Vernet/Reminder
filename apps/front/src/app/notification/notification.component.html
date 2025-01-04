@@ -81,7 +81,8 @@
 				</td>
 
 				<td class="small-cell">
-					<p-tag [value]="notification.status" [severity]="getSeverity(notification.status)"/>
+					<p-tag [value]="notification.status ? 'Active' : 'Inactive'"
+								 [severity]=" notification.status ? 'success' : 'warn'"/>
 				</td>
 
 				<td class="big-cell">
@@ -115,6 +116,23 @@
 							Name
 						</label>
 						<input type="text" pInputText id="name" formControlName="name" required autofocus fluid/>
+						<div
+							*ngIf="formGroupCreateNotification.controls.name.invalid"
+							class="error-message">
+							<small class="text-red-500"
+										 *ngIf="!formGroupCreateNotification.controls.name.value && formGroupCreateNotification.controls.name.touched">
+								Name is required
+							</small>
+							<small class="text-red-500"
+										 *ngIf="formGroupCreateNotification.controls.name.errors['minlength'] && formGroupCreateNotification.controls.name.touched">
+								Name must be at least {{ formGroupCreateNotification.controls.name.errors['minlength'].requiredLength }}
+								characters
+							</small>
+							<small class="text-red-500" *ngIf="formGroupCreateNotification.controls.name.errors['maxlength']">
+								Name must be at most {{ formGroupCreateNotification.controls.name.errors['maxlength'].requiredLength }}
+								characters
+							</small>
+						</div>
 					</div>
 
 					<div>
@@ -122,6 +140,38 @@
 							Cron
 						</label>
 						<input type="text" pInputText id="cron" formControlName="cron" required autofocus fluid/>
+						<div
+							*ngIf="formGroupCreateNotification.controls.cron.invalid"
+							class="error-message">
+							<small class="text-red-500"
+										 *ngIf="!formGroupCreateNotification.controls.cron.value && formGroupCreateNotification.controls.cron.touched">
+								Cron is required
+							</small>
+							<small class="text-red-500"
+										 *ngIf="formGroupCreateNotification.controls.cron.errors['minlength'] && formGroupCreateNotification.controls.cron.touched">
+								Cron must be at least {{ formGroupCreateNotification.controls.cron.errors['minlength'].requiredLength }}
+								characters
+							</small>
+							<small class="text-red-500" *ngIf="formGroupCreateNotification.controls.cron.errors['maxlength']">
+								Cron must be at most {{ formGroupCreateNotification.controls.cron.errors['maxlength'].requiredLength }}
+								characters
+							</small>
+						</div>
+					</div>
+
+					<div *ngIf="formGroupCreateNotification.controls.id.value">
+						<label for="status" class="block font-bold mb-3">
+							Status
+						</label>
+						<p-select
+							[options]="status"
+							formControlName="status"
+							inputId="status"
+							optionLabel="label"
+							placeholder="Select a Status"
+							fluid
+							id="status"
+						/>
 					</div>
 
 					<div>
@@ -129,6 +179,25 @@
 							Notification title
 						</label>
 						<input type="text" pInputText id="title" formControlName="title" required autofocus fluid/>
+						<div
+							*ngIf="formGroupCreateNotification.controls.title.invalid"
+							class="error-message">
+							<small class="text-red-500"
+										 *ngIf="!formGroupCreateNotification.controls.title.value && formGroupCreateNotification.controls.title.touched">
+								Title is required
+							</small>
+							<small class="text-red-500"
+										 *ngIf="formGroupCreateNotification.controls.title.errors['minlength'] && formGroupCreateNotification.controls.title.touched">
+								Title must be at
+								least {{ formGroupCreateNotification.controls.title.errors['minlength'].requiredLength }}
+								characters
+							</small>
+							<small class="text-red-500" *ngIf="formGroupCreateNotification.controls.title.errors['maxlength']">
+								Title must be at
+								most {{ formGroupCreateNotification.controls.title.errors['maxlength'].requiredLength }}
+								characters
+							</small>
+						</div>
 					</div>
 
 					<div>
@@ -136,6 +205,25 @@
 							Notification description
 						</label>
 						<input type="text" pInputText id="description" formControlName="description" required autofocus fluid/>
+						<div
+							*ngIf="formGroupCreateNotification.controls.description.invalid"
+							class="error-message">
+							<small class="text-red-500"
+										 *ngIf="!formGroupCreateNotification.controls.description.value && formGroupCreateNotification.controls.description.touched">
+								Description is required
+							</small>
+							<small class="text-red-500"
+										 *ngIf="formGroupCreateNotification.controls.description.errors['minlength'] && formGroupCreateNotification.controls.description.touched">
+								Description must be at
+								least {{ formGroupCreateNotification.controls.description.errors['minlength'].requiredLength }}
+								characters
+							</small>
+							<small class="text-red-500" *ngIf="formGroupCreateNotification.controls.description.errors['maxlength']">
+								Description must be at
+								most {{ formGroupCreateNotification.controls.description.errors['maxlength'].requiredLength }}
+								characters
+							</small>
+						</div>
 					</div>
 				</div>
 			</form>

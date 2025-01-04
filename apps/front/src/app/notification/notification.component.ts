@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ConfirmationService, MessageService } from "primeng/api";
@@ -14,6 +14,8 @@ import { InputText } from "primeng/inputtext";
 import { NotificationDto } from "../../../../libs/interfaces";
 import { NotificationService } from "./notification.service";
 import { Tag } from "primeng/tag";
+import { Select } from "primeng/select";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
 	selector: 'app-reminder',
@@ -30,14 +32,15 @@ import { Tag } from "primeng/tag";
 		Dialog,
 		InputText,
 		ReactiveFormsModule,
-		Tag
+		Tag,
+		Select
 	],
 	templateUrl: './notification.component.html',
 	styleUrl: './notification.component.scss',
 	standalone: true,
 	providers: [MessageService, ConfirmationService, NotificationService]
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent implements OnInit, OnDestroy {
 
 	notificationDialog: boolean = false;
 
@@ -47,16 +50,29 @@ export class NotificationComponent implements OnInit {
 
 	submitted: boolean = false;
 
+	status = [
+		{
+			label: 'Active',
+			value: true
+		},
+		{
+			label: 'Inactive',
+			value: false
+		}
+	];
+
 	formGroupCreateNotification = new FormGroup({
-		id: new FormControl(''),
-		name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		cron: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		title: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		description: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		id: new FormControl<string>(''),
+		name: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		cron: new FormControl<string>('', [Validators.required, Validators.minLength(9), Validators.maxLength(11)]),
+		status: new FormControl<boolean>(false, [Validators.required]),
+		title: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		description: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
 	});
 
 	@ViewChild('dt') dt!: Table;
 
+	unsubscribe$: Subject<void> = new Subject<void>();
 
 	constructor(
 		private readonly notificationService: NotificationService,
@@ -66,7 +82,17 @@ export class NotificationComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.notificationService.notifications$.subscribe(notifications => this.notifications = notifications)
+		this.notificationService.notifications$
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe(notifications => {
+				notifications.sort((a, b) => a.name.localeCompare(b.name));
+				this.notifications = notifications;
+			});
+	}
+
+	ngOnDestroy() {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
 	}
 
 	filter($event) {
@@ -75,19 +101,22 @@ export class NotificationComponent implements OnInit {
 
 	showDialogCreateNotification() {
 		this.notificationDialog = true;
+		this.formGroupCreateNotification.controls.status.setValue(true);
 	}
 
 	hideDialogCreateNotification() {
 		this.notificationDialog = false;
+		this.formGroupCreateNotification.reset();
 	}
 
 	createNotification() {
-		const { id, name, cron, title, description } = this.formGroupCreateNotification.value;
+		const { id, name, cron, status, title, description } = this.formGroupCreateNotification.value;
 
 		const notification: NotificationDto = {
 			id: Number(id),
 			name: name.trim(),
 			cron: cron.trim(),
+			status: status['value'],
 			title: title.trim(),
 			description: description.trim()
 		};
@@ -110,6 +139,7 @@ export class NotificationComponent implements OnInit {
 		}
 
 		this.notificationDialog = false;
+		this.formGroupCreateNotification.reset();
 	}
 
 
@@ -118,9 +148,11 @@ export class NotificationComponent implements OnInit {
 			id: notification.id.toString(),
 			name: notification.name,
 			cron: notification.cron,
+			status: notification.status,
 			title: notification.title,
 			description: notification.description
 		});
+
 		this.notificationDialog = true;
 	}
 
@@ -153,8 +185,11 @@ export class NotificationComponent implements OnInit {
 		});
 	}
 
-	getSeverity(status: boolean) {
-		return status ? 'success' : 'warn';
+	@HostListener('document:keydown', ['$event'])
+	private handleKeyboardEvent(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			this.hideDialogCreateNotification();
+		}
 	}
 
 	private showSuccess(detail: string) {

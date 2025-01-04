@@ -40,10 +40,15 @@ export class NotificationService {
 	}
 
 	updateNotification(notification: NotificationDto) {
-		return this.http.patch<NotificationDto>(`${ this.notificationUri }/${ notification.id }`, { notification })
+		return this.http.patch<NotificationDto>(`${this.notificationUri}/${notification.id}`, { notification })
 			.pipe(
-				map((notification: NotificationDto) => this.notificationsSubject.next(this.notificationsSubject.value.map(e => e.id == notification.id ? notification : e)))
-			)
+				map((updatedNotification: NotificationDto) => {
+					const updatedNotifications = this.notificationsSubject.value.map(e =>
+						e.id === updatedNotification.id ? updatedNotification : e
+					);
+					this.notificationsSubject.next(updatedNotifications);
+				})
+			);
 	}
 
 	deleteNotification(id: number) {
