@@ -27,7 +27,8 @@
           }
         ],
         "styles": [
-          "apps/front/src/styles.scss"
+          "apps/front/src/styles.scss",
+					"node_modules/primeicons/primeicons.css"
         ],
         "scripts": []
       },

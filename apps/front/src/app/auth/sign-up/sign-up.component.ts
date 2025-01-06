@@ -8,11 +8,11 @@ import { FocusTrap } from "primeng/focustrap";
 import { catchError, EMPTY, filter, Subject, switchMap, takeUntil } from "rxjs";
 import { AuthService } from "../auth.service";
 import { FloatLabel } from "primeng/floatlabel";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
 	selector: 'app-sign-up',
-	imports: [CommonModule, ButtonModule, InputText, FormsModule, AutoFocus, FocusTrap, ReactiveFormsModule, FloatLabel],
+	imports: [CommonModule, ButtonModule, InputText, FormsModule, AutoFocus, FocusTrap, ReactiveFormsModule, FloatLabel, RouterLink],
 	templateUrl: './sign-up.component.html',
 	styleUrl: './sign-up.component.scss',
 	standalone: true,
@@ -40,7 +40,13 @@ export class SignUpComponent implements OnInit, OnDestroy {
 			filter(() => this.checkForm()),
 			switchMap(() => this.authService.signUp(this.formSignUp.value.email, this.formSignUp.value.password)
 				.pipe(
-					catchError(() => EMPTY)
+					catchError((err) => {
+						this.formSignUp.setErrors({
+							authError: err.error.message ?? 'Invalid credentials'
+						});
+
+						return EMPTY;
+					})
 				))
 		)
 			.subscribe({
@@ -56,7 +62,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
 	private checkForm(): boolean {
 		if (this.formSignUp.value.password !== this.formSignUp.value.confirmPassword) {
-			this.formSignUp.setErrors({ passwordMismatch: true });
+			this.formSignUp.setErrors({ passwordMismatch: 'Passwords do not match' });
 			return false;
 		}
 

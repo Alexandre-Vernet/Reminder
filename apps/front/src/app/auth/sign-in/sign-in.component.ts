@@ -7,12 +7,12 @@ import { Button } from "primeng/button";
 import { FocusTrap } from "primeng/focustrap";
 import { InputText } from "primeng/inputtext";
 import { FloatLabel } from "primeng/floatlabel";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AutoFocus } from "primeng/autofocus";
 
 @Component({
 	selector: 'app-sign-in',
-	imports: [CommonModule, Button, FocusTrap, FormsModule, InputText, ReactiveFormsModule, FloatLabel, AutoFocus],
+	imports: [CommonModule, Button, FocusTrap, FormsModule, InputText, ReactiveFormsModule, FloatLabel, AutoFocus, RouterLink],
 	templateUrl: './sign-in.component.html',
 	styleUrl: './sign-in.component.scss',
 	standalone: true,
@@ -34,12 +34,22 @@ export class SignInComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.authService.signInWithAccessToken()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe(() => this.router.navigate(['/']));
+
 		this.buttonSubmitForm$.pipe(
 			takeUntil(this.unsubscribe$),
 			filter(() => this.formSignIn.valid),
 			switchMap(() => this.authService.signIn(this.formSignIn.value.email, this.formSignIn.value.password)
 				.pipe(
-					catchError(() => EMPTY)
+					catchError((err) => {
+						this.formSignIn.setErrors({
+							authError: err.error.message ?? 'Invalid credentials'
+						});
+
+						return EMPTY;
+					})
 				))
 		)
 			.subscribe({

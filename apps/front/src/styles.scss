@@ -18,3 +18,27 @@ body {
 }
 
 
+.text-red-500 {
+	color: #f56565;
+	font-size: 11px;
+}
+
+.mt-4 {
+	margin-top: 10px;
+}
+
+.text-gray-500 {
+	color: #718096;
+	font-size: 10px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+}
+

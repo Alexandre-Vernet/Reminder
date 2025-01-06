@@ -22,9 +22,6 @@ services:
       - WEB_PUSH_PUBLIC_KEY=
       - WEB_PUSH_PRIVATE_KEY=
       - WEB_PUSH_EMAIL=
-      - WEB_PUSH_ENDPOINT=
-      - WEB_PUSH_P_256_DH=
-      - WEB_PUSH_AUTH=
       - POSTGRES_HOST=
       - POSTGRES_PORT=
       - POSTGRES_USERNAME=

@@ -1,4 +1,4 @@
-import { UserDto } from "../user/UserDto";
+import { UserDto } from "../user/user.dto";
 
 export interface NotificationDto {
 	id?: number;
@@ -6,7 +6,7 @@ export interface NotificationDto {
 	cron: string;
 	title: string;
 	description: string;
-	status?: boolean;
+	status: boolean;
 	createdAt?: Date;
 	user?: UserDto;
 }

@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { Subscription } from "../../../../libs/interfaces";
+import { SubscriptionDto } from "../../../../libs/interfaces";
 import { SubscriptionService } from "./subscription.service";
 
 @Controller('subscription')
@@ -11,7 +11,7 @@ export class SubscriptionController {
 	}
 
 	@Post()
-	createSubscription(@Body() subscription: Subscription) {
+	createSubscription(@Body() subscription: SubscriptionDto) {
 		return this.subscriptionService.createSubscription(subscription);
 	}
 }

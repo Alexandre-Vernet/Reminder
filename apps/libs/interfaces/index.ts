@@ -1,3 +1,3 @@
-export * from './subscription/subscription'
-export * from './user/UserDto'
-export * from './notification/notification'
+export * from './subscription/subscription.dto'
+export * from './user/user.dto'
+export * from './notification/notification.dto'

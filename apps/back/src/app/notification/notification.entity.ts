@@ -1,20 +1,14 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { SubscriptionEntity } from "../subscription/subscription.entity";
 import { UserEntity } from "../auth/user.entity";
 
 @Entity('notification', { schema: 'public' })
 export class NotificationEntity {
-
 	@PrimaryGeneratedColumn('increment')
 	id: number;
 
-	@ManyToOne(() => UserEntity, user => user.id)
+	@ManyToOne(() => UserEntity, user => user.notifications)
 	@JoinColumn({ name: 'user_id' })
 	user: UserEntity;
-
-	@ManyToOne(() => SubscriptionEntity, notification => notification.id, {cascade: true, eager: true})
-	@JoinColumn({ name: 'subscription_id' })
-	subscription: SubscriptionEntity;
 
 	@Column()
 	name: string;
