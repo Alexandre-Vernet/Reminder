@@ -1,15 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post, } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserDto } from "../../../../libs/interfaces";
 
 @Controller('auth')
 export class AuthController {
 	constructor(private readonly authService: AuthService) {
-	}
-
-	@Get()
-	hello() {
-		return 'Hello World!';
 	}
 
 	@Post('sign-up')
