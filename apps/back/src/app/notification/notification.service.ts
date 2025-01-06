@@ -4,6 +4,7 @@ import { FindManyOptions, Repository } from "typeorm";
 import { NotificationEntity } from "./notification.entity";
 import { NotificationDto, UserDto } from "../../../../libs/interfaces";
 import { CronService } from "../cron/cron.service";
+import { SchedulerRegistry } from "@nestjs/schedule";
 
 @Injectable()
 export class NotificationService {
@@ -12,6 +13,8 @@ export class NotificationService {
 		@InjectRepository(NotificationEntity)
 		private notificationRepository: Repository<NotificationEntity>,
 		private readonly cronService: CronService,
+		private schedulerRegistry: SchedulerRegistry,
+
 	) {
 	}
 
@@ -49,7 +52,12 @@ export class NotificationService {
 		const notification = await this.notificationRepository.findOne({
 			where: { id: notificationId }
 		});
+
 		if (notification.status) {
+			const cronExists = this.schedulerRegistry.doesExist('cron', notificationId.toString());
+			if (!cronExists) {
+				return;	// Nothing to do
+			}
 			this.cronService.deleteCron(notificationId);
 		}
 
