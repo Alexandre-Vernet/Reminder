@@ -29,7 +29,12 @@ export class AuthService {
 		}
 		user.password = hashedPassword;
 
-		return await this.userRepository.findOne(option) ?? await this.userRepository.save(user);
+		const existingUSer = await this.userRepository.findOne(option);
+		if (existingUSer) {
+			throw new ConflictException('Email already exists');
+		}
+
+		return await this.userRepository.save(user);
 	}
 
 	async signIn(user: UserDto) {

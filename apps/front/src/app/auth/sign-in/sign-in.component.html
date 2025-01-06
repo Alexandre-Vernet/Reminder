@@ -1,20 +1,40 @@
 <div class="center">
 	<form (ngSubmit)="buttonSubmitForm$.next()" [formGroup]="formSignIn">
-		<div pFocusTrap class="w-full sm:w-80 flex flex-col gap-6 m-4">
+		<div pFocusTrap class="w-full sm:w-80 flex flex-col">
+			<div class="auth-form">
+				<!--Email-->
+				<div>
+					<p-floatlabel>
+						<input id="username" pInputText formControlName="email" [pAutoFocus]="true"/>
+						<label for="username">Email</label>
+					</p-floatlabel>
 
-			<!--Email-->
-			<p-floatlabel>
-				<input id="username" pInputText formControlName="email" [pAutoFocus]="true" />
-				<label for="username">Username</label>
-			</p-floatlabel>
+					<div *ngIf="formSignIn.hasError"
+							 class="error-message">
+						<small class="text-red-500"
+									 *ngIf="formSignIn.hasError('authError')">
+							{{formSignIn.getError('authError')}}
+						</small>
+					</div>
+				</div>
 
-			<!--Password-->
-			<p-floatlabel>
-				<input id="password" pInputText type="password" formControlName="password" />
-				<label for="username">Password</label>
-			</p-floatlabel>
+				<!--Password-->
+				<p-floatlabel>
+					<input id="password" pInputText type="password" formControlName="password"/>
+					<label for="password">Password</label>
+				</p-floatlabel>
+			</div>
 
-			<p-button [disabled]="formSignIn.invalid" type="submit" label="Submit" class="mt-2" styleClass="w-full"/>
+			<!-- Go to sign up-->
+			<div class="mt-4">
+				<p class="text-center">
+					<span routerLink="/auth/sign-up" class="cursor-pointer text-gray-500">Don't have an account?</span>
+			</div>
+
+
+			<div class="mt-4">
+				<p-button [disabled]="formSignIn.invalid" type="submit" label="Submit" styleClass="w-full"/>
+			</div>
 		</div>
 	</form>
 </div>
