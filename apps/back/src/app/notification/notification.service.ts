@@ -53,12 +53,12 @@ export class NotificationService {
 			where: { id: notificationId }
 		});
 
+
 		if (notification.status) {
 			const cronExists = this.schedulerRegistry.doesExist('cron', notificationId.toString());
-			if (!cronExists) {
-				return;	// Nothing to do
+			if (cronExists) {
+				this.cronService.deleteCron(notificationId);
 			}
-			this.cronService.deleteCron(notificationId);
 		}
 
 		return this.notificationRepository.delete(notificationId);
