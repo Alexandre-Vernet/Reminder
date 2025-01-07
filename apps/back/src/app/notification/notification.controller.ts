@@ -20,7 +20,7 @@ export class NotificationController {
 	}
 
 	@Patch(':id')
-	update(@Param('id') id: number, @Body() { notification }: { notification: NotificationDto }) {
+	update(@Param('id') id: number, @Body() notification: NotificationDto) {
 		return this.notificationService.update(id, notification);
 	}
 

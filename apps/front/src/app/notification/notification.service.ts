@@ -40,7 +40,7 @@ export class NotificationService {
 	}
 
 	updateNotification(notification: NotificationDto) {
-		return this.http.patch<NotificationDto>(`${ this.notificationUri }/${ notification.id }`, { notification })
+		return this.http.patch<NotificationDto>(`${ this.notificationUri }/${ notification.id }`, notification)
 			.pipe(
 				map((updatedNotification: NotificationDto) => {
 					const updatedNotifications = this.notificationsSubject.value.map(e =>
