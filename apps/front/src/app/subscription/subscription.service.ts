@@ -14,7 +14,7 @@ export class SubscriptionService {
 		private readonly http: HttpClient,
 	) { }
 
-	createSubscription(subscription: any) {
-		return this.http.post<SubscriptionDto>(this.subscriptionUri, { subscription });
+	createSubscription(subscription: SubscriptionDto) {
+		return this.http.post<SubscriptionDto>(this.subscriptionUri, subscription);
 	}
 }

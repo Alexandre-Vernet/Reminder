@@ -6,7 +6,7 @@ export class UserEntity {
 	@PrimaryGeneratedColumn('increment')
 	id: number;
 
-	@OneToMany(() => NotificationEntity, notification => notification.user)
+	@OneToMany(() => NotificationEntity, notification => notification.id)
 	notifications: NotificationEntity[];
 
 	@Column()
