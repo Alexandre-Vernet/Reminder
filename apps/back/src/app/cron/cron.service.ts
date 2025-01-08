@@ -81,6 +81,8 @@ export class CronService {
 			}
 		}
 
+console.log('Sending notification', notification);
+
 		await this.sendNotification(notification);
 	}
 }
