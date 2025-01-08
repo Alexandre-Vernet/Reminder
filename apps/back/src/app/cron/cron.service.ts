@@ -66,7 +66,7 @@ export class CronService {
 		});
 	}
 
-	@Cron('0 22 * * *')
+	@Cron('0 23 * * *')
 	async testCron() {
 		const notification: NotificationDto = {
 			id: 456,
