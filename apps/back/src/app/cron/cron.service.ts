@@ -17,6 +17,7 @@ export class CronService {
 
 	addCron(notification: NotificationDto) {
 		const job = new CronJob(notification.cron, async () => {
+			console.log('Sending notification', notification);
 			await this.sendNotification(notification);
 		});
 		this.schedulerRegistry.addCronJob(notification.id.toString(), job);
