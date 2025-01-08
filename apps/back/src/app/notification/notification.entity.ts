@@ -6,7 +6,7 @@ export class NotificationEntity {
 	@PrimaryGeneratedColumn('increment')
 	id: number;
 
-	@ManyToOne(() => UserEntity, user => user.notifications)
+	@ManyToOne(() => UserEntity, user => user.id)
 	@JoinColumn({ name: 'user_id' })
 	user: UserEntity;
 

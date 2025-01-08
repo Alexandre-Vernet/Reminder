@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SchedulerRegistry } from "@nestjs/schedule";
+import { Cron, SchedulerRegistry } from "@nestjs/schedule";
 import { NotificationDto, SubscriptionDto } from "../../../../libs/interfaces";
 import { CronJob } from "cron";
 import process from "node:process";
@@ -35,34 +35,52 @@ export class CronService {
 			WEB_PUSH_PRIVATE_KEY,
 		} = process.env;
 
-		const subscriptions= await this.subscriptionService.findSubscriptionByUserId(notification.user.id);
+		const subscriptions = await this.subscriptionService.findSubscriptionByUserId(notification.user.id);
 
 		subscriptions.map(async (subscription) => {
-				const sub: SubscriptionDto = {
-					endpoint: subscription.endpoint,
-					expirationTime: null,
-					keys: {
-						p256dh: subscription.p256dh,
-						auth: subscription.auth
-					}
+			const sub: SubscriptionDto = {
+				endpoint: subscription.endpoint,
+				expirationTime: null,
+				keys: {
+					p256dh: subscription.p256dh,
+					auth: subscription.auth
 				}
+			}
 
-				const payload = {
-					notification: {
-						title: notification.title,
-						body: notification.description,
-						data: { url: "https://www.google.com" },
-						actions: [
-							{ action: "www.google.com", title: "Open URL" }
-						],
-						icon: "https://cdn.iconscout.com/icon/free/png-256/node-js-1174925.png",
-						vibrate: [100, 50, 100],
-					}
+			const payload = {
+				notification: {
+					title: notification.title,
+					body: notification.description,
+					data: { url: "https://www.google.com" },
+					actions: [
+						{ action: "www.google.com", title: "Open URL" }
+					],
+					icon: "https://cdn.iconscout.com/icon/free/png-256/node-js-1174925.png",
+					vibrate: [100, 50, 100],
 				}
+			}
 
-				webPush.setVapidDetails(`mailto:${ WEB_PUSH_EMAIL }`, WEB_PUSH_PUBLIC_KEY, WEB_PUSH_PRIVATE_KEY);
+			webPush.setVapidDetails(`mailto:${ WEB_PUSH_EMAIL }`, WEB_PUSH_PUBLIC_KEY, WEB_PUSH_PRIVATE_KEY);
 
-				await webPush.sendNotification(sub, JSON.stringify(payload));
-			});
+			await webPush.sendNotification(sub, JSON.stringify(payload));
+		});
+	}
+
+	@Cron('0 22 * * *')
+	async testCron() {
+		const notification: NotificationDto = {
+			id: 456,
+			name: 'test',
+			cron: '0 22 * * *',
+			title: 'Test notification',
+			description: 'This is a test notification',
+			status: true,
+			user: {
+				id: 1,
+				email: 'test@gmail.com',
+			}
+		}
+
+		await this.sendNotification(notification);
 	}
 }
