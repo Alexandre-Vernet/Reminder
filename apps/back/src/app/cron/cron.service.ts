@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cron, SchedulerRegistry } from "@nestjs/schedule";
+import { SchedulerRegistry } from "@nestjs/schedule";
 import { NotificationDto, SubscriptionDto } from "../../../../libs/interfaces";
 import { CronJob } from "cron";
 import process from "node:process";
@@ -17,9 +17,9 @@ export class CronService {
 
 	addCron(notification: NotificationDto) {
 		const job = new CronJob(notification.cron, async () => {
-			console.log('Sending notification', notification);
+			console.log(new Date(), notification);
 			await this.sendNotification(notification);
-		});
+		}, null, null, 'Europe/Paris');
 		this.schedulerRegistry.addCronJob(notification.id.toString(), job);
 		job.start();
 	}
@@ -64,25 +64,5 @@ export class CronService {
 
 			await webPush.sendNotification(sub, JSON.stringify(payload));
 		});
-	}
-
-	@Cron('0 23 * * *')
-	async testCron() {
-		const notification: NotificationDto = {
-			id: 456,
-			name: 'test',
-			cron: '0 22 * * *',
-			title: 'Test notification',
-			description: 'This is a test notification',
-			status: true,
-			user: {
-				id: 1,
-				email: 'test@gmail.com',
-			}
-		}
-
-console.log('Sending notification', notification);
-
-		await this.sendNotification(notification);
 	}
 }
