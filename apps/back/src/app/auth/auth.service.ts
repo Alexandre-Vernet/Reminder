@@ -34,7 +34,12 @@ export class AuthService {
 			throw new ConflictException('Email already exists');
 		}
 
-		return await this.userRepository.save(user);
+		const savedUser = await this.userRepository.save(user);
+		if (!savedUser) {
+			throw new ConflictException('Something went wrong. Please try again later.');
+		}
+
+		return { accessToken: await this.jwtService.signAsync({ user: savedUser }) }
 	}
 
 	async signIn(user: UserDto) {

@@ -2,7 +2,7 @@ name: Docker build images, push to DockerHub and redeploy containers
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "main" ]
 

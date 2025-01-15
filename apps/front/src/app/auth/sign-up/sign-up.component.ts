@@ -51,7 +51,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 		)
 			.subscribe({
 				next: () => this.router.navigate(['/']),
-				error: err => console.error('Could not sign up', err)
+				error: err => this.formSignUp.controls.email.setErrors(err.error.message)
 			})
 	}
 
