@@ -69,7 +69,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 		status: new FormControl<boolean>(false, [Validators.required]),
 		title: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
 		description: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		imageURL: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255), notificationIconValidator()]),
+		imageURL: new FormControl<string | null>(null, [Validators.minLength(7), Validators.maxLength(255), notificationIconValidator()]),
 	});
 
 	@ViewChild('dt') dt!: Table;

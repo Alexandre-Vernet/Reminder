@@ -239,15 +239,10 @@
 							Notification icon
 						</label>
 						<input type="text" pInputText id="imageURL" placeholder="https://example.com/icon.png"
-									 formControlName="imageURL" required autofocus fluid/>
+									 formControlName="imageURL" autofocus fluid/>
 						<div
 							*ngIf="formGroupCreateNotification.controls.imageURL.invalid"
 							class="error-message">
-							<small
-								*ngIf="!formGroupCreateNotification.controls.imageURL.value && formGroupCreateNotification.controls.imageURL.touched"
-								class="text-red-500">
-								Notification icon is required
-							</small>
 							<small
 								*ngIf="formGroupCreateNotification.controls.imageURL.errors['minlength'] && formGroupCreateNotification.controls.imageURL.touched"
 								class="text-red-500">
