@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { NotificationEntity } from "./notification.entity";
@@ -7,15 +7,25 @@ import { CronService } from "../cron/cron.service";
 import { SchedulerRegistry } from "@nestjs/schedule";
 
 @Injectable()
-export class NotificationService {
+export class NotificationService implements OnModuleInit {
 
 	constructor(
 		@InjectRepository(NotificationEntity)
 		private notificationRepository: Repository<NotificationEntity>,
 		private readonly cronService: CronService,
 		private schedulerRegistry: SchedulerRegistry,
-
 	) {
+	}
+
+	// Re-create cron after server restart
+	onModuleInit() {
+		this.notificationRepository.find().then(notifications => {
+			notifications.map(notification => {
+				if (notification.status) {
+					this.cronService.addCron(notification);
+				}
+			});
+		});
 	}
 
 	async createNotification(notification: NotificationDto, user: UserDto) {
