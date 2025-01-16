@@ -25,7 +25,7 @@ export class NotificationEntity {
 	@Column()
 	description: string;
 
-	@Column({name: 'image_url'})
+	@Column({ name: 'image_url', nullable: true })
 	imageURL: string;
 
 	@Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
