@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catchError, combineLatest, EMPTY, filter, map, Subject, switchMap, takeUntil } from "rxjs";
+import { catchError, combineLatest, delay, EMPTY, filter, map, Subject, switchMap, takeUntil } from "rxjs";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
 import { Button } from "primeng/button";
@@ -42,7 +42,8 @@ export class SignInComponent implements OnInit, OnDestroy {
 		])
 			.pipe(
 				takeUntil(this.unsubscribe$),
-				map(([param, _]: [{ message: string }, user: UserDto]) => param.message)
+				map(([param, _]: [{ message: string }, user: UserDto]) => param.message),
+				delay(100)
 			)
 			.subscribe((error) => {
 				if (error) {
@@ -58,9 +59,9 @@ export class SignInComponent implements OnInit, OnDestroy {
 			filter(() => this.formSignIn.valid),
 			switchMap(() => this.authService.signIn(this.formSignIn.value.email, this.formSignIn.value.password)
 				.pipe(
-					catchError((error) => {
+					catchError((err) => {
 						this.formSignIn.setErrors({
-							authError: error ?? 'Invalid credentials'
+							authError: err.error.message ?? 'Invalid credentials'
 						});
 
 						return EMPTY;
