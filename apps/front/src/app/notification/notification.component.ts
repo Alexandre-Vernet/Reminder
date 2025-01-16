@@ -121,7 +121,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 			status: status['value'],
 			title: title.trim(),
 			description: description.trim(),
-			imageURL: imageURL.trim()
+			imageURL: imageURL ? imageURL.trim() : null
 		};
 
 		if (notification.id) {
