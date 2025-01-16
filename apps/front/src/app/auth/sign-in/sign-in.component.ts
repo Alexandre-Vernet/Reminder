@@ -59,7 +59,6 @@ export class SignInComponent implements OnInit, OnDestroy {
 			switchMap(() => this.authService.signIn(this.formSignIn.value.email, this.formSignIn.value.password)
 				.pipe(
 					catchError((error) => {
-						console.log(error)
 						this.formSignIn.setErrors({
 							authError: error ?? 'Invalid credentials'
 						});
@@ -68,10 +67,7 @@ export class SignInComponent implements OnInit, OnDestroy {
 					})
 				))
 		)
-			.subscribe({
-				next: () => this.router.navigate(['/']),
-				error: err => console.error('Could not sign in', err)
-			})
+			.subscribe(() => this.router.navigate(['/']));
 	}
 
 	ngOnDestroy() {
