@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
 
 			this.sw.messages.subscribe(msg => console.log(msg));
 			this.sw.notificationClicks.subscribe(({ action, notification }) => {
+				console.log(action, notification)
 				window.open(notification.data.url);
 				fetch('');
 			});

@@ -233,6 +233,42 @@
 							</small>
 						</div>
 					</div>
+
+					<div>
+						<label for="description" class="block font-bold mb-3">
+							Notification icon
+						</label>
+						<input type="text" pInputText id="imageURL" placeholder="https://example.com/icon.png"
+									 formControlName="imageURL" required autofocus fluid/>
+						<div
+							*ngIf="formGroupCreateNotification.controls.imageURL.invalid"
+							class="error-message">
+							<small
+								*ngIf="!formGroupCreateNotification.controls.imageURL.value && formGroupCreateNotification.controls.imageURL.touched"
+								class="text-red-500">
+								Notification icon is required
+							</small>
+							<small
+								*ngIf="formGroupCreateNotification.controls.imageURL.errors['minlength'] && formGroupCreateNotification.controls.imageURL.touched"
+								class="text-red-500">
+								Notification icon must be at
+								least {{ formGroupCreateNotification.controls.imageURL.errors['minlength'].requiredLength }}
+								characters
+							</small>
+							<small *ngIf="formGroupCreateNotification.controls.imageURL.errors['maxlength']"
+										 class="text-red-500">
+								Notification icon must be at
+								most {{ formGroupCreateNotification.controls.imageURL.errors['maxlength'].requiredLength }}
+								characters
+							</small>
+							<small *ngIf="formGroupCreateNotification.controls.imageURL.errors['invalidStartNotificationIconURL']" class="text-red-500">
+								Notification icon must start with http:// or https://
+							</small>
+							<small *ngIf="formGroupCreateNotification.controls.imageURL.errors['invalidEndNotificationIconURL']" class="text-red-500">
+								Notification icon must end with .png, .jpg, .jpeg, .svg, .gif or .webp
+							</small>
+						</div>
+					</div>
 				</div>
 			</form>
 		</ng-template>

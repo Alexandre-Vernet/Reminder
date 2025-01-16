@@ -18,6 +18,7 @@ import { Select } from "primeng/select";
 import { Subject, takeUntil } from "rxjs";
 import { cronFormatValidator } from "../validators/cronFormatValidator";
 import { cronPartsLengthValidator } from "../validators/cronPartsLengthValidator";
+import { notificationIconValidator } from "../validators/notificationIconValidator";
 
 @Component({
 	selector: 'app-reminder',
@@ -68,6 +69,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 		status: new FormControl<boolean>(false, [Validators.required]),
 		title: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
 		description: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		imageURL: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255), notificationIconValidator()]),
 	});
 
 	@ViewChild('dt') dt!: Table;
@@ -110,7 +112,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 	}
 
 	createNotification() {
-		const { id, name, cron, status, title, description } = this.formGroupCreateNotification.value;
+		const { id, name, cron, status, title, description, imageURL } = this.formGroupCreateNotification.value;
 
 		const notification: NotificationDto = {
 			id: Number(id),
@@ -118,7 +120,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
 			cron: cron.trim(),
 			status: status['value'],
 			title: title.trim(),
-			description: description.trim()
+			description: description.trim(),
+			imageURL: imageURL.trim()
 		};
 
 		if (notification.id) {
