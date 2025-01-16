@@ -2,7 +2,7 @@ name: Docker build images, push to DockerHub and redeploy containers
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -69,5 +69,6 @@ jobs:
           script: |
             docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:front
             docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:back
+            docker system prune -f
             cd /home/debian/apps/reminder/
             docker-compose up -d
