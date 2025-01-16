@@ -54,6 +54,8 @@ export class NotificationService implements OnModuleInit {
 		} else {
 			this.cronService.deleteCron(notificationId);
 		}
+
+		notification.updatedAt = new Date();
 		await this.notificationRepository.update(notificationId, notification);
 		return this.notificationRepository.findOne({ where: { id: notificationId } });
 	}
