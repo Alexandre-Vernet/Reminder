@@ -153,7 +153,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
 			cron: notification.cron,
 			status: notification.status,
 			title: notification.title,
-			description: notification.description
+			description: notification.description,
+			imageURL: notification.imageURL
 		});
 
 		this.notificationDialog = true;
