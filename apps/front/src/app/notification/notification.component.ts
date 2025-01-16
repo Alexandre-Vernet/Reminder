@@ -63,7 +63,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 	];
 
 	formGroupCreateNotification = new FormGroup({
-		id: new FormControl<string>(''),
+		id: new FormControl<number>(0),
 		name: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
 		cron: new FormControl<string>('', [Validators.required, Validators.maxLength(60), cronPartsLengthValidator(), cronFormatValidator()]),
 		status: new FormControl<boolean>(false, [Validators.required]),
@@ -98,7 +98,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 	}
 
 	filter($event) {
-		this.dt.filterGlobal($event.target.value, 'contains')
+		this.dt.filterGlobal($event.target.value, 'contains');
 	}
 
 	showDialogCreateNotification() {
@@ -115,7 +115,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 		const { id, name, cron, status, title, description, imageURL } = this.formGroupCreateNotification.value;
 
 		const notification: NotificationDto = {
-			id: Number(id),
+			id: id,
 			name: name.trim(),
 			cron: cron.trim(),
 			status: status['value'],
@@ -129,14 +129,14 @@ export class NotificationComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: () => {
 						this.formGroupCreateNotification.reset();
-						this.showSuccess('Notification Updated');
+						this.showSuccess('Notification updated');
 					},
-					error: (err) => this.showError(err.error.message ?? 'Error creating notification')
+					error: (err) => this.showError(err.error.message ?? 'Error updating notification')
 				});
 		} else {
 			this.notificationService.createNotification(notification)
 				.subscribe({
-					next: () => this.showSuccess('Notification Created'),
+					next: () => this.showSuccess('Notification created'),
 					error: (err) => this.showError(err.error.message ?? 'Error creating notification')
 				});
 		}
@@ -148,10 +148,9 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
 	showDialogUpdateNotification(notification: NotificationDto) {
 		this.formGroupCreateNotification.patchValue({
-			id: notification.id.toString(),
+			id: notification.id,
 			name: notification.name,
 			cron: notification.cron,
-			status: notification.status,
 			title: notification.title,
 			description: notification.description,
 			imageURL: notification.imageURL
@@ -172,7 +171,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 	deleteNotification(notification: NotificationDto) {
 		this.notificationService.deleteNotification(notification.id)
 			.subscribe({
-				next: () => this.showSuccess('Notification Deleted'),
+				next: () => this.showSuccess('Notification deleted'),
 				error: (err) => this.showError(err.error.message ?? 'Error deleting notification')
 			})
 	}
@@ -183,7 +182,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
 			header: 'Confirm',
 			icon: 'pi pi-exclamation-triangle',
 			accept: () => {
-				this.selectedNotification.forEach(notification => this.deleteNotification(notification))
+				this.selectedNotification.forEach(notification => this.deleteNotification(notification));
 				this.selectedNotification = null;
 			}
 		});

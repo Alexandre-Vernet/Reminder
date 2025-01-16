@@ -36,7 +36,7 @@
 					<p-tableHeaderCheckbox/>
 				</th>
 
-				<th pSortableColumn="name" class="big-cell">
+				<th pSortableColumn="name" class="small-cell">
 					Name
 					<p-sortIcon field="name"/>
 				</th>
@@ -59,9 +59,9 @@
 					Description
 				</th>
 
-				<th pSortableColumn="createdAt" class="big-cell">
-					Date
-					<p-sortIcon field="createdAt"/>
+				<th pSortableColumn="lastUpdate" class="big-cell">
+					Last update
+					<p-sortIcon field="lastUpdate"/>
 				</th>
 				<th class="small-cell">
 					Action
@@ -74,7 +74,7 @@
 					<p-tableCheckbox [value]="notification"/>
 				</td>
 
-				<td class="big-cell">
+				<td class="small-cell">
 					{{ notification.name }}
 				</td>
 
@@ -96,7 +96,7 @@
 				</td>
 
 				<td class="big-cell">
-					{{ notification.createdAt | date:'dd-MM-YYYY | HH:mm:ss' }}
+					{{ notification.updatedAt | date:'dd/MM/yyyy HH:mm' }}
 				</td>
 
 				<td>
