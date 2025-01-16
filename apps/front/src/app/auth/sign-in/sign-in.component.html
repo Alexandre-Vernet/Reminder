@@ -9,10 +9,8 @@
 						<label for="username">Email</label>
 					</p-floatlabel>
 
-					<div *ngIf="formSignIn.hasError"
-							 class="error-message">
-						<small class="text-red-500"
-									 *ngIf="formSignIn.hasError('authError')">
+					<div *ngIf="formSignIn.hasError" class="error-message">
+						<small *ngIf="formSignIn.hasError('authError')" class="text-red-500">
 							{{formSignIn.getError('authError')}}
 						</small>
 					</div>

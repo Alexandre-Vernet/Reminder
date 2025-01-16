@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from "rxjs";
+import { BehaviorSubject, Observable, of, tap } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { UserDto } from "../../../../libs/interfaces";
@@ -23,10 +23,10 @@ export class AuthService {
 		return this.userSubject.value;
 	}
 
-	signUp(email: string, password: string): Observable<UserDto> {
-		return this.http.post<UserDto>(`${ this.authUrl }/sign-up`, { email, password })
+	signUp(email: string, password: string): Observable<{ accessToken: string }> {
+		return this.http.post<{ accessToken: string }>(`${ this.authUrl }/sign-up`, { email, password })
 			.pipe(
-				tap(user => this.setUser(user)),
+				tap(res => localStorage.setItem('accessToken', res.accessToken)),
 			);
 	}
 
@@ -39,10 +39,13 @@ export class AuthService {
 
 	signInWithAccessToken(): Observable<UserDto> {
 		const accessToken = localStorage.getItem('accessToken');
-		return this.http.post<UserDto>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
-			.pipe(
-				tap(user => this.setUser(user)),
-			);
+		if (accessToken) {
+			return this.http.post<UserDto>(`${ this.authUrl }/sign-in-with-access-token`, { accessToken })
+				.pipe(
+					tap(user => this.setUser(user)),
+				);
+		}
+		return of(null);
 	}
 
 	private setUser(user: UserDto) {

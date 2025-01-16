@@ -15,12 +15,17 @@ export const authGuard: CanActivateFn = (route, state) => {
 
 	return combineLatest([
 		authService.signInWithAccessToken(),
-		from(swPush.requestSubscription({
+		environment.production ? from(swPush.requestSubscription({
 			serverPublicKey: environment.serverPublicKey
-		}))
+		})) : of(null)
 	])
 		.pipe(
 			switchMap(([user, subscription]: [UserDto, any]) => {
+				if (!user) {
+					state.url = '/auth/sign-in';
+					router.navigate([state.url], { queryParams: { message: 'You need to sign in to access this page' } });
+					return of(false);
+				}
 				if (environment.production) {
 					const subscriptionData: SubscriptionDto = JSON.parse(JSON.stringify(subscription));
 					const sub: SubscriptionDto = {
@@ -39,9 +44,15 @@ export const authGuard: CanActivateFn = (route, state) => {
 					return of(true);
 				}
 			}),
-			catchError(() => {
+			catchError((err) => {
 				state.url = '/auth/sign-in';
-				router.navigate([state.url]);
+				const errorMessage = err.error && err.error.message
+					? err.error.message
+					?? err.message
+					: 'An unknown error occurred';
+
+				const queryParams = { message: errorMessage };
+				router.navigate([state.url], { queryParams });
 				return of(false);
 			})
 		);
