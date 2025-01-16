@@ -54,7 +54,7 @@ export class CronService {
 					actions: [
 						{ action: "www.google.com", title: "Open URL" }
 					],
-					icon: "https://cdn.iconscout.com/icon/free/png-256/node-js-1174925.png",
+					icon: notification.imageURL,
 					vibrate: [100, 50, 100],
 				}
 			}

@@ -7,6 +7,7 @@ export interface NotificationDto {
 	title: string;
 	description: string;
 	status: boolean;
+	imageURL: string;
 	createdAt?: Date;
 	user?: UserDto;
 }
