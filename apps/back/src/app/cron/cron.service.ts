@@ -17,13 +17,15 @@ export class CronService {
 
 	addCron(notification: NotificationDto) {
 		const jobExists = this.schedulerRegistry.doesExist('cron', notification.id.toString());
-		if (!jobExists) {
-			const job = new CronJob(notification.cron, async () => {
-				await this.sendNotification(notification);
-			}, null, null, 'Europe/Paris');
-			this.schedulerRegistry.addCronJob(notification.id.toString(), job);
-			job.start();
+		if (jobExists) {
+			this.deleteCron(notification.id);
 		}
+
+		const job = new CronJob(notification.cron, async () => {
+			await this.sendNotification(notification);
+		}, null, null, 'Europe/Paris');
+		this.schedulerRegistry.addCronJob(notification.id.toString(), job);
+		job.start();
 	}
 
 	deleteCron(notificationId: number) {
