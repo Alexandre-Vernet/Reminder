@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from "@angular/common/http";
-import { SwPush } from '@angular/service-worker';
+import { SwPush, SwUpdate } from '@angular/service-worker';
 import { MessageService } from "primeng/api";
 import { Toast } from "primeng/toast";
 import { environment } from "../environments/environment";
@@ -20,12 +20,23 @@ export class AppComponent implements OnInit {
 		private readonly http: HttpClient,
 		private readonly sw: SwPush,
 		private readonly messageService: MessageService,
+		private readonly swUpdate: SwUpdate
 	) {
-		this.sw.messages.subscribe(msg => console.log(msg));
-		this.sw.notificationClicks.subscribe(({ action, notification }) => {
-			window.open(notification.data.url);
-			fetch('');
-		});
+		// Force refresh PWA
+		this.swUpdate.checkForUpdate();
+		if (this.swUpdate.isEnabled) {
+			this.swUpdate.versionUpdates.subscribe(event => {
+				if (event.type === 'VERSION_READY') {
+					window.location.reload();
+				}
+			});
+
+			this.sw.messages.subscribe(msg => console.log(msg));
+			this.sw.notificationClicks.subscribe(({ action, notification }) => {
+				window.open(notification.data.url);
+				fetch('');
+			});
+		}
 	}
 
 	ngOnInit() {
