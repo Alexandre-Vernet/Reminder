@@ -50,7 +50,7 @@ export class NotificationService implements OnModuleInit {
 		this.cronService.addCron(notification);
 		notification.updatedAt = new Date();
 		await this.notificationRepository.update(notificationId, notification);
-		return this.notificationRepository.findOne({ where: { id: notificationId } });
+		return notification;
 	}
 
 	delete(notificationId: number) {
