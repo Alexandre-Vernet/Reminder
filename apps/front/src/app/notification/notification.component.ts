@@ -176,9 +176,24 @@ export class NotificationComponent implements OnInit, OnDestroy {
 			})
 	}
 
-	deleteSelectedProducts() {
+	duplicateSelectedNotifications() {
+		this.selectedNotification.forEach(notification => {
+			const duplicateNotification: NotificationDto = {
+				...notification,
+				id: null,
+				name: `${ notification.name } (copy)`
+			}
+			this.notificationService.createNotification(duplicateNotification).subscribe({
+				next: () => this.showSuccess('Notification created'),
+				error: (err) => this.showError(err.error.message ?? 'Error creating notification')
+			});
+		});
+		this.selectedNotification = null;
+	}
+
+	deleteSelectedNotifications() {
 		this.confirmationService.confirm({
-			message: 'Are you sure you want to delete the selected products?',
+			message: 'Are you sure you want to delete the selected notifications ?',
 			header: 'Confirm',
 			icon: 'pi pi-exclamation-triangle',
 			accept: () => {
