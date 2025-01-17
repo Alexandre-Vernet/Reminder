@@ -208,6 +208,9 @@ export class NotificationComponent implements OnInit, OnDestroy {
 		if (event.key === 'Escape') {
 			this.hideDialogCreateNotification();
 		}
+		if (event.key === 'Enter' && this.notificationDialog) {
+			this.createNotification();
+		}
 	}
 
 	private showSuccess(detail: string) {
