@@ -16,24 +16,24 @@ export class CronService {
 	}
 
 	addCron(notification: NotificationDto) {
-		const jobExists = this.schedulerRegistry.doesExist('cron', notification.id.toString());
-		if (jobExists) {
-			this.deleteCron(notification.id);
-		}
+		this.checkJobExistsAndDelete(notification.id);
 
-		const job = new CronJob(notification.cron, async () => {
-			await this.sendNotification(notification);
-		}, null, null, 'Europe/Paris');
-		this.schedulerRegistry.addCronJob(notification.id.toString(), job);
-		job.start();
+		if (notification.status) {
+			const job = new CronJob(notification.cron, async () => {
+				await this.sendNotification(notification);
+			}, null, null, 'Europe/Paris');
+			this.schedulerRegistry.addCronJob(notification.id.toString(), job);
+			job.start();
+		}
 	}
 
-	deleteCron(notificationId: number) {
+	checkJobExistsAndDelete(notificationId: number) {
 		const jobExists = this.schedulerRegistry.doesExist('cron', notificationId.toString());
-		if (!jobExists) {
-			this.schedulerRegistry.deleteCronJob(notificationId.toString());
+		if (jobExists) {
+			return this.schedulerRegistry.deleteCronJob(notificationId.toString());
 		}
 	}
+
 
 	async sendNotification(notification: NotificationDto) {
 		const {
