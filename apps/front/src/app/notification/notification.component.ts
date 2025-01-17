@@ -128,21 +128,29 @@ export class NotificationComponent implements OnInit, OnDestroy {
 			this.notificationService.updateNotification(notification)
 				.subscribe({
 					next: () => {
-						this.formGroupCreateNotification.reset();
 						this.showSuccess('Notification updated');
+						this.notificationDialog = false;
+						this.formGroupCreateNotification.reset();
 					},
 					error: (err) => this.showError(err.error.message ?? 'Error updating notification')
 				});
 		} else {
 			this.notificationService.createNotification(notification)
 				.subscribe({
-					next: () => this.showSuccess('Notification created'),
-					error: (err) => this.showError(err.error.message ?? 'Error creating notification')
+					next: () => {
+						this.showSuccess('Notification created');
+						this.notificationDialog = false;
+						this.formGroupCreateNotification.reset();
+					},
+					error: (err) => {
+						if (err.error.code === 'NAME_EXISTS') {
+							this.formGroupCreateNotification.controls.name.setErrors({ 'nameExists': err.error.message });
+						} else {
+							this.showError(err.error.message ?? 'Error creating notification');
+						}
+					}
 				});
 		}
-
-		this.notificationDialog = false;
-		this.formGroupCreateNotification.reset();
 	}
 
 

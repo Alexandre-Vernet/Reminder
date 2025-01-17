@@ -136,6 +136,9 @@
 								Name must be at most {{ formGroupCreateNotification.controls.name.errors['maxlength'].requiredLength }}
 								characters
 							</small>
+							<small class="text-red-500" *ngIf="formGroupCreateNotification.controls.name.errors['nameExists']">
+								{{ formGroupCreateNotification.controls.name.errors['nameExists'] }}
+							</small>
 						</div>
 					</div>
 

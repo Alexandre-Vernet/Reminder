@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { NotificationEntity } from "./notification.entity";
@@ -27,6 +27,19 @@ export class NotificationService implements OnModuleInit {
 	}
 
 	async createNotification(notification: NotificationDto, user: UserDto) {
+		// Check if name is already used
+		const existingNotification = await this.notificationRepository.find({
+			where: {
+				user: {
+					id: user.id
+				},
+				name: notification.name
+			}
+		});
+		if (existingNotification.length) {
+			throw new HttpException({ message: 'Notification with this name already exists', code: 'NAME_EXISTS' },HttpStatus.CONFLICT);
+		}
+
 		notification.status = true;
 		notification.user = user;
 		const createdNotification = await this.notificationRepository.save(notification);
