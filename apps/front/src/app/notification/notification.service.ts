@@ -40,6 +40,7 @@ export class NotificationService {
 	}
 
 	updateNotification(notification: NotificationDto) {
+		notification.user = this.authService.getUser();
 		return this.http.patch<NotificationDto>(`${ this.notificationUri }/${ notification.id }`, notification)
 			.pipe(
 				map((updatedNotification: NotificationDto) => {
