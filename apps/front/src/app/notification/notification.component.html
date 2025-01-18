@@ -3,7 +3,9 @@
 	<p-toolbar styleClass="mb-6">
 		<ng-template #start>
 			<p-button label="New" icon="pi pi-plus" class="mr-2" (onClick)="showDialogCreateNotification()"/>
-			<p-button severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()"
+			<p-button severity="info" label="Duplicate" icon="pi pi-copy" outlined (onClick)="duplicateSelectedNotifications()"
+								[disabled]="!selectedNotification || !selectedNotification.length"/>
+			<p-button severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedNotifications()"
 								[disabled]="!selectedNotification || !selectedNotification.length"/>
 		</ng-template>
 	</p-toolbar>
@@ -133,6 +135,9 @@
 							<small class="text-red-500" *ngIf="formGroupCreateNotification.controls.name.errors['maxlength']">
 								Name must be at most {{ formGroupCreateNotification.controls.name.errors['maxlength'].requiredLength }}
 								characters
+							</small>
+							<small class="text-red-500" *ngIf="formGroupCreateNotification.controls.name.errors['nameExists']">
+								{{ formGroupCreateNotification.controls.name.errors['nameExists'] }}
 							</small>
 						</div>
 					</div>
