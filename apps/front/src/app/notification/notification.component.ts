@@ -64,11 +64,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
 	formGroupCreateNotification = new FormGroup({
 		id: new FormControl<number>(0),
-		name: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		cron: new FormControl<string>('', [Validators.required, Validators.maxLength(60), cronPartsLengthValidator(), cronFormatValidator()]),
+		name: new FormControl<string>('test', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		cron: new FormControl<string>('* * * * *', [Validators.required, Validators.maxLength(60), cronPartsLengthValidator(), cronFormatValidator()]),
 		status: new FormControl<boolean>(false, [Validators.required]),
-		title: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		description: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		title: new FormControl<string>('azdazdazdazd', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		description: new FormControl<string>('azdazdazdazd', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
 		imageURL: new FormControl<string | null>(null, [Validators.minLength(7), Validators.maxLength(255), notificationIconValidator()]),
 	});
 
@@ -185,18 +185,27 @@ export class NotificationComponent implements OnInit, OnDestroy {
 	}
 
 	duplicateSelectedNotifications() {
+		let nextIndex = this.notifications.length + 1;
+
 		this.selectedNotification.forEach(notification => {
-			const duplicateNotification: NotificationDto = {
-				...notification,
-				id: null,
-				name: `${ notification.name } (copy)`
-			}
-			this.notificationService.createNotification(duplicateNotification).subscribe({
+			// Get the base name
+			// Exemple : "Notification (1)" => "Notification"
+			const baseName = notification.name.replace(/\s*\(\d+\)$/, '').trim();
+
+			notification.id = null;
+			notification.name = `${ baseName } (${ nextIndex })`;
+
+			nextIndex++;
+		});
+
+		// Appeler le service pour créer les nouvelles notifications
+		this.notificationService.createMultipleNotification(this.selectedNotification)
+			.subscribe({
 				next: () => this.showSuccess('Notification created'),
 				error: (err) => this.showError(err.error.message ?? 'Error creating notification')
 			});
-		});
-		this.selectedNotification = null;
+
+		this.selectedNotification = [];
 	}
 
 	deleteSelectedNotifications() {

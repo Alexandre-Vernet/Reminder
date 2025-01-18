@@ -14,6 +14,11 @@ export class NotificationController {
 		return this.notificationService.createNotification(notification, user);
 	}
 
+	@Post('multiple')
+	createMultiple(@Body() { notification, user }: { notification: NotificationDto[], user: UserDto }) {
+		return this.notificationService.createMultipleNotification(notification, user);
+	}
+
 	@Get()
 	findAll(@Query('userId') userId: number) {
 		return this.notificationService.findAllByUserId(userId);

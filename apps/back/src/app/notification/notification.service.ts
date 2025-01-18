@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, Repository } from "typeorm";
+import { FindManyOptions, In, Repository } from "typeorm";
 import { NotificationEntity } from "./notification.entity";
 import { NotificationDto, UserDto } from "../../../../libs/interfaces";
 import { CronService } from "../cron/cron.service";
@@ -37,7 +37,10 @@ export class NotificationService implements OnModuleInit {
 			}
 		});
 		if (existingNotification.length) {
-			throw new HttpException({ message: 'Notification with this name already exists', code: 'NAME_EXISTS' },HttpStatus.CONFLICT);
+			throw new HttpException({
+				message: 'Notification with this name already exists',
+				code: 'NAME_EXISTS'
+			}, HttpStatus.CONFLICT);
 		}
 
 		notification.status = true;
@@ -46,6 +49,34 @@ export class NotificationService implements OnModuleInit {
 		this.cronService.addCron(createdNotification);
 
 		return notification;
+	}
+
+	async createMultipleNotification(notification: NotificationDto[], user: UserDto) {
+		// Check if name is already used
+		const existingNotification = await this.notificationRepository.find({
+			where: {
+				user: {
+					id: user.id
+				},
+				name: In(notification.map(n => n.name))
+			}
+		});
+		if (existingNotification.length) {
+			throw new HttpException({
+				message: 'Notification with this name already exists',
+				code: 'NAME_EXISTS'
+			}, HttpStatus.CONFLICT);
+		}
+
+
+		notification.map(async (notification) => {
+			notification.status = true;
+			notification.user = user;
+		});
+		const createdNotification = await this.notificationRepository.save(notification);
+		createdNotification.map(notification => this.cronService.addCron(notification));
+
+		return this.findAllByUserId(user.id);
 	}
 
 	findAllByUserId(userId: number) {

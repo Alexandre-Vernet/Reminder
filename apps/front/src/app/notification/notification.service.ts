@@ -39,6 +39,14 @@ export class NotificationService {
 			)
 	}
 
+	createMultipleNotification(notification: NotificationDto[]) {
+		const user = this.authService.getUser();
+		return this.http.post<NotificationDto[]>(`${this.notificationUri}/multiple`, { notification, user })
+			.pipe(
+				map((notification: NotificationDto[]) => this.notificationsSubject.next(notification))
+			)
+	}
+
 	updateNotification(notification: NotificationDto) {
 		notification.user = this.authService.getUser();
 		return this.http.patch<NotificationDto>(`${ this.notificationUri }/${ notification.id }`, notification)
