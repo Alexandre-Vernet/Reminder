@@ -64,11 +64,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
 	formGroupCreateNotification = new FormGroup({
 		id: new FormControl<number>(0),
-		name: new FormControl<string>('test', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		cron: new FormControl<string>('* * * * *', [Validators.required, Validators.maxLength(60), cronPartsLengthValidator(), cronFormatValidator()]),
+		name: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		cron: new FormControl<string>('', [Validators.required, Validators.maxLength(60), cronPartsLengthValidator(), cronFormatValidator()]),
 		status: new FormControl<boolean>(false, [Validators.required]),
-		title: new FormControl<string>('azdazdazdazd', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
-		description: new FormControl<string>('azdazdazdazd', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		title: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
+		description: new FormControl<string>('', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]),
 		imageURL: new FormControl<string | null>(null, [Validators.minLength(7), Validators.maxLength(255), notificationIconValidator()]),
 	});
 
