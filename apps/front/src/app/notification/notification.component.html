@@ -2,10 +2,13 @@
 	<p-toast/>
 	<p-toolbar styleClass="mb-6">
 		<ng-template #start>
-			<p-button label="New" icon="pi pi-plus" class="mr-2" (onClick)="showDialogCreateNotification()"/>
-			<p-button severity="info" label="Duplicate" icon="pi pi-copy" outlined (onClick)="duplicateSelectedNotifications()"
+			<p-button [size]="window.innerWidth < 425 ? 'small' : undefined" label="New" icon="pi pi-plus" class="mr-2"
+								(onClick)="showDialogCreateNotification()"/>
+			<p-button [size]="window.innerWidth < 425 ? 'small' : undefined" severity="info" label="Duplicate"
+								icon="pi pi-copy" outlined (onClick)="duplicateSelectedNotifications()"
 								[disabled]="!selectedNotification || !selectedNotification.length"/>
-			<p-button severity="danger" label="Delete" icon="pi pi-trash" outlined (onClick)="deleteSelectedNotifications()"
+			<p-button [size]="window.innerWidth < 425 ? 'small' : undefined" severity="danger" label="Delete"
+								icon="pi pi-trash" outlined (onClick)="deleteSelectedNotifications()"
 								[disabled]="!selectedNotification || !selectedNotification.length"/>
 		</ng-template>
 	</p-toolbar>
@@ -261,10 +264,12 @@
 								most {{ formGroupCreateNotification.controls.imageURL.errors['maxlength'].requiredLength }}
 								characters
 							</small>
-							<small *ngIf="formGroupCreateNotification.controls.imageURL.errors['invalidStartNotificationIconURL']" class="text-red-500">
+							<small *ngIf="formGroupCreateNotification.controls.imageURL.errors['invalidStartNotificationIconURL']"
+										 class="text-red-500">
 								Notification icon must start with http:// or https://
 							</small>
-							<small *ngIf="formGroupCreateNotification.controls.imageURL.errors['invalidEndNotificationIconURL']" class="text-red-500">
+							<small *ngIf="formGroupCreateNotification.controls.imageURL.errors['invalidEndNotificationIconURL']"
+										 class="text-red-500">
 								Notification icon must end with .png, .jpg, .jpeg, .svg, .gif or .webp
 							</small>
 						</div>

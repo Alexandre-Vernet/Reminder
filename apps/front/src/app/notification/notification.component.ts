@@ -247,4 +247,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
 			life: 3000
 		});
 	}
+
+	protected readonly window = window;
 }
