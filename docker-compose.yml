@@ -39,9 +39,9 @@ services:
     networks:
       - reminder-network
     environment:
-      - POSTGRES_DB=
-      - POSTGRES_USER=
-      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=reminder
+      - POSTGRES_USER=reminder
+      - POSTGRES_PASSWORD=reminder
     ports:
       - "5006:5432"
       - "5007:443"
