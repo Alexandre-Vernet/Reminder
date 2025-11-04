@@ -1,16 +1,7 @@
 version: '3'
 services:
-  reminder-front:
-    image: alexv31/reminder:front
-    restart: always
-    networks:
-      - reminder-network
-    ports:
-      - "3006:80"
-      - "3007:443"
-
-  reminder-back:
-    image: alexv31/reminder:back
+  reminder-api:
+    image: alexv31/reminder:api
     restart: always
     depends_on:
         - reminder-db

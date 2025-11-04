@@ -2,10 +2,11 @@ name: Docker build images, push to DockerHub and redeploy containers
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*" ]
 
 env:
-  APP_NAME: reminder
+  API_NAME: reminder-api
+  DOCKERHUB_REPOSITORY_NAME: reminder
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   SERVER_HOST: ${{ secrets.SERVER_HOST }}
@@ -18,55 +19,46 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - uses: actions/checkout@v3
-      - name: Build images front and back
-        run: |
-          docker build -t ${{ env.APP_NAME }}:front -f apps/front/Dockerfile .
-          docker build -t ${{ env.APP_NAME }}:back -f apps/back/Dockerfile .
+      -   uses: actions/checkout@v3
+      -   name: Build image api
+          run: |
+            docker build -t  ${{ env.DOCKERHUB_REPOSITORY_NAME }}:api -f ${{ env.API_NAME }}/Dockerfile .
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
-          password: ${{ env.DOCKERHUB_TOKEN }}
+      -   name: Login to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ env.DOCKERHUB_USERNAME }}
+            password: ${{ env.DOCKERHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}
+      -   name: Extract metadata (tags, labels) for Docker
+          id: meta
+          uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+          with:
+            images: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY_NAME }}
 
-      - name: Push image front
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          file: apps/front/Dockerfile
-          push: true
-          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:front
 
-      - name: Push image back
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          file: apps/back/Dockerfile
-          push: true
-          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:back
+      -   name: Push image api
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ${{ env.API_NAME }}/Dockerfile
+            push: true
+            tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY_NAME }}:api
 
   redeploy-containers:
     needs: build-push-images
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ env.SERVER_HOST }}
-          username: ${{ env.SERVER_USERNAME }}
-          password: ${{ env.SERVER_PASSWORD }}
-          port: ${{ env.SERVER_PORT }}
-          script: |
-            docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:front
-            docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:back
-            docker system prune -f
-            cd /home/debian/apps/reminder/
-            docker-compose up -d
+      -   name: executing remote ssh commands using password
+          uses: appleboy/ssh-action@v1.1.0
+          with:
+            host: ${{ env.SERVER_HOST }}
+            username: ${{ env.SERVER_USERNAME }}
+            password: ${{ env.SERVER_PASSWORD }}
+            port: ${{ env.SERVER_PORT }}
+            script: |
+              docker pull ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY_NAME }}:api
+              docker system prune -f
+              cd /home/debian/apps/${{ env.DOCKERHUB_REPOSITORY_NAME }}/
+              docker-compose up -d
