@@ -19,6 +19,8 @@ import { cronFormatValidator } from "../validators/cronFormatValidator";
 import { cronPartsLengthValidator } from "../validators/cronPartsLengthValidator";
 import { notificationIconValidator } from "../validators/notificationIconValidator";
 import { NotificationDto } from "../interfaces";
+import { FcmTokenService } from "../fcm-token/fcm-token.service";
+import { AuthService } from "../auth/auth.service";
 
 @Component({
 	selector: 'app-reminder',
@@ -80,8 +82,15 @@ export class NotificationComponent implements OnInit, OnDestroy {
 		private readonly notificationService: NotificationService,
 		private readonly messageService: MessageService,
 		private readonly confirmationService: ConfirmationService,
+    private readonly fcmService: FcmTokenService,
+    private readonly authService: AuthService
 	) {
 	}
+
+
+  test() {
+    this.fcmService.requestFcmToken(this.authService.getUser());
+  }
 
 	ngOnInit() {
 		this.notificationService.notifications$

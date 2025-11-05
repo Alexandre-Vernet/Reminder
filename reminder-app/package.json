@@ -28,6 +28,7 @@
     "@capacitor/status-bar": "7.0.3",
     "@ionic/angular": "^8.0.0",
     "@primeng/themes": "^19.1.4",
+    "firebase": "^12.5.0",
     "ionicons": "^7.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^19.1.4",

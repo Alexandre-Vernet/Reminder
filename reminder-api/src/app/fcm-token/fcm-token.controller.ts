@@ -4,7 +4,7 @@ import { AuthInterceptor } from "../auth/auth.interceptor";
 import { FcmTokenDto } from "../interfaces";
 
 @UseInterceptors(AuthInterceptor)
-@Controller('subscription')
+@Controller('fcm-token')
 export class FcmTokenController {
 
 	constructor(

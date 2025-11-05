@@ -22,6 +22,7 @@ export class FcmTokenService {
 	}
 
 	async createToken(fcmToken: FcmTokenDto) {
+		console.log("fcmToken", fcmToken)
 		const existingToken = await this.fcmTokenEntityRepository.findOne({
 			where: {
 				token: fcmToken.token,

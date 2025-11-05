@@ -1,78 +1,67 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catchError, combineLatest, delay, EMPTY, filter, map, Subject, switchMap, takeUntil } from "rxjs";
+import { catchError, EMPTY, filter, Subject, switchMap } from "rxjs";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
 import { Button } from "primeng/button";
 import { FocusTrap } from "primeng/focustrap";
 import { InputText } from "primeng/inputtext";
 import { FloatLabel } from "primeng/floatlabel";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AutoFocus } from "primeng/autofocus";
-import { UserDto } from "../../interfaces";
+import { AlertService } from "../../utils/alert.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
-	selector: 'app-sign-in',
-	imports: [CommonModule, Button, FocusTrap, FormsModule, InputText, ReactiveFormsModule, FloatLabel, AutoFocus, RouterLink],
-	templateUrl: './sign-in.component.html',
-	styleUrl: './sign-in.component.scss',
-	standalone: true,
+  selector: 'app-sign-in',
+  imports: [CommonModule, Button, FocusTrap, FormsModule, InputText, ReactiveFormsModule, FloatLabel, AutoFocus, RouterLink],
+  templateUrl: './sign-in.component.html',
+  styleUrl: './sign-in.component.scss',
+  standalone: true,
 })
-export class SignInComponent implements OnInit, OnDestroy {
+export class SignInComponent implements OnInit {
 
-	buttonSubmitForm$: Subject<void> = new Subject<void>();
-	unsubscribe$: Subject<void> = new Subject<void>();
+  buttonSubmitForm$: Subject<void> = new Subject<void>();
 
-	formSignIn = new FormGroup({
-		email: new FormControl<string>('', [Validators.email, Validators.required, Validators.maxLength(255)]),
-		password: new FormControl<string>('', [Validators.required, Validators.minLength(6), Validators.maxLength(255)]),
-	});
+  formSignIn = new FormGroup({
+    email: new FormControl<string>(null, [Validators.email, Validators.required, Validators.maxLength(255)]),
+    password: new FormControl<string>(null, [Validators.required, Validators.minLength(6), Validators.maxLength(255)]),
+  });
 
-	constructor(
-		private readonly authService: AuthService,
-		private readonly router: Router,
-		private readonly activatedRoute: ActivatedRoute,
-	) {
-	}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly alertService: AlertService,
+    private readonly destroyRef: DestroyRef
+  ) {
+  }
 
-	ngOnInit() {
-		combineLatest([
-			this.activatedRoute.queryParams,
-			this.authService.signInWithAccessToken()
-		])
-			.pipe(
-				takeUntil(this.unsubscribe$),
-				map(([param, _]: [{ message: string }, user: UserDto]) => param.message),
-				delay(100)
-			)
-			.subscribe((error) => {
-				if (error) {
-					this.formSignIn.setErrors({
-						authError: error
-					});
-				}
-				this.router.navigate(['/']);
-			});
+  ngOnInit() {
+    this.alertService.message$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter(value => !!value)
+      )
+      .subscribe(message => {
+        this.formSignIn.setErrors({
+          authError: message
+        });
+      });
 
-		this.buttonSubmitForm$.pipe(
-			takeUntil(this.unsubscribe$),
-			filter(() => this.formSignIn.valid),
-			switchMap(() => this.authService.signIn(this.formSignIn.value.email, this.formSignIn.value.password)
-				.pipe(
-					catchError((err) => {
-						this.formSignIn.setErrors({
-							authError: err.error.message ?? 'Invalid credentials'
-						});
+    this.buttonSubmitForm$.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      filter(() => this.formSignIn.valid),
+      switchMap(() => this.authService.signIn(this.formSignIn.value.email, this.formSignIn.value.password)
+        .pipe(
+          catchError((err) => {
+            this.formSignIn.setErrors({
+              authError: err.error.message ?? 'Invalid credentials'
+            });
 
-						return EMPTY;
-					})
-				))
-		)
-			.subscribe(() => this.router.navigate(['/']));
-	}
-
-	ngOnDestroy() {
-		this.unsubscribe$.next();
-		this.unsubscribe$.complete();
-	}
+            return EMPTY;
+          })
+        ))
+    )
+      .subscribe(() => this.router.navigate(['/']));
+  }
 }
