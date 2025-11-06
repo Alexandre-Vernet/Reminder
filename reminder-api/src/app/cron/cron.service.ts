@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { CronJob } from "cron";
-// import * as webPush from "web-push";
 import { FcmTokenService } from "../fcm-token/fcm-token.service";
-import { NotificationDto, FcmTokenDto } from "../interfaces";
+import { NotificationDto } from "../interfaces";
+import { getMessaging, Message } from "firebase-admin/messaging";
 
 @Injectable()
 export class CronService {
@@ -35,35 +35,36 @@ export class CronService {
 
 
 	async sendNotification(notification: NotificationDto) {
-		const {
-			WEB_PUSH_EMAIL,
-			WEB_PUSH_PUBLIC_KEY,
-			WEB_PUSH_PRIVATE_KEY,
-		} = process.env;
+		const fcmTokens = await this.subscriptionService.findTokenByUserId(notification.user.id);
 
-		const subscriptions = await this.subscriptionService.findTokenByUserId(notification.user.id);
-
-		subscriptions.map(async (subscription) => {
-			const sub: FcmTokenDto = {
-				token: subscription.token,
-			}
-
-			const payload = {
+		fcmTokens.map(async (subscription) => {
+			const message: Message = {
 				notification: {
 					title: notification.title,
 					body: notification.description,
-					data: { url: "https://www.google.com" },
-					actions: [
-						{ action: "www.google.com", title: "Open URL" }
-					],
-					icon: notification.imageURL,
-					vibrate: [100, 50, 100],
-				}
-			}
+				},
+				android: {
+					priority: 'high',
+					notification: {
+						sound: 'test',
+						icon: 'icon'
+					},
+				},
+				data: {
+					score: '850',
+					time: '2:45'
+				},
+				token: subscription.token
+			};
 
-			// webPush.setVapidDetails(`mailto:${ WEB_PUSH_EMAIL }`, WEB_PUSH_PUBLIC_KEY, WEB_PUSH_PRIVATE_KEY);
-			//
-			// await webPush.sendNotification(sub, JSON.stringify(payload));
+			getMessaging().send(message)
+				.then((response) => {
+					// Response is a message ID string.
+					console.log('Successfully sent message:', response);
+				})
+				.catch((error) => {
+					console.log('Error sending message:', error);
+				});
 		});
 	}
 }

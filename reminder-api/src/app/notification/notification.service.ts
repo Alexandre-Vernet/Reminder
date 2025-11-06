@@ -15,6 +15,16 @@ export class NotificationService implements OnModuleInit {
 	) {
 	}
 
+	test() {
+		const n: NotificationDto = {
+			user: {
+				id: 1,
+				email: 'test'
+			}
+		};
+		this.cronService.sendNotification(n);
+	}
+
 	// Re-create cron after server restart
 	onModuleInit() {
 		this.notificationRepository.find().then(notifications => {

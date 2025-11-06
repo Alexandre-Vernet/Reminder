@@ -1,5 +1,5 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { FcmTokenEntity } from "./fcm-token.entity";
 import { FcmTokenDto } from "../interfaces";
 
@@ -11,23 +11,19 @@ export class FcmTokenService {
 	}
 
 	findTokenByUserId(userId: number) {
-		const options: FindManyOptions = {
+		return this.fcmTokenEntityRepository.find({
 			where: {
 				user: {
 					id: userId
 				}
 			}
-		}
-		return this.fcmTokenEntityRepository.find(options);
+		});
 	}
 
 	async createToken(fcmToken: FcmTokenDto) {
 		const existingToken = await this.fcmTokenEntityRepository.findOne({
 			where: {
-				token: fcmToken.token,
-				user: {
-					id: fcmToken.user.id
-				}
+				token: fcmToken.token
 			}
 		});
 

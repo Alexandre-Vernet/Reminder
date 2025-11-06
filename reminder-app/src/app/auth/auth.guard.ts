@@ -14,7 +14,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   return authService.signInWithAccessToken()
     .pipe(
       switchMap(user => {
-        console.log(user)
         if (!user) {
           alert.setMessage('You need to sign in to access this page');
           router.navigateByUrl('/auth/sign-in');

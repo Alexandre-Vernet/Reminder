@@ -9,6 +9,11 @@ export class NotificationController {
 	constructor(private readonly notificationService: NotificationService) {
 	}
 
+	@Get('test')
+	test() {
+		return this.notificationService.test();
+	}
+
 	@Post()
 	create(@Body() { notification, user }: { notification: NotificationDto, user: UserDto }) {
 		return this.notificationService.createNotification(notification, user);

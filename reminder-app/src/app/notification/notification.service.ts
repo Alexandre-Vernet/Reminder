@@ -24,6 +24,10 @@ export class NotificationService {
 		}
 	}
 
+  test() {
+    return this.http.get<NotificationDto[]>(`${this.notificationUri}/test`);
+  }
+
 	getNotifications() {
 		return this.http.get<NotificationDto[]>(this.notificationUri, { params: { userId: this.authService.getUser().id } })
 			.pipe(
