@@ -83,11 +83,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
 	) {
 	}
 
-
-  test() {
-    this.notificationService.test().subscribe();
-  }
-
 	ngOnInit() {
 		this.notificationService.notifications$
 			.pipe(takeUntil(this.unsubscribe$))

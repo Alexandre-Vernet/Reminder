@@ -10,9 +10,6 @@
 			<p-button [size]="window.innerWidth < 425 ? 'small' : undefined" severity="danger" label="Delete"
 								icon="pi pi-trash" outlined (onClick)="deleteSelectedNotifications()"
 								[disabled]="!selectedNotification || !selectedNotification.length"/>
-		<p-button severity="success" label="test notif"
-								icon="pi pi-trash" outlined (onClick)="test()"
-								/>
 		</ng-template>
 	</p-toolbar>
 

@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { FcmTokenDto, UserDto } from "../interfaces";
 import { environment } from "../../environments/environment";
 import { PushNotifications } from "@capacitor/push-notifications";
-import { NotificationService } from "../notification/notification.service";
 
 @Injectable({
   providedIn: 'root'

@@ -43,27 +43,28 @@ export class CronService {
 					title: notification.title,
 					body: notification.description,
 				},
-				android: {
-					priority: 'high',
-					notification: {
-						sound: 'test',
-						icon: 'icon'
-					},
-				},
-				data: {
-					score: '850',
-					time: '2:45'
-				},
+				// android: {
+				// 	priority: 'high',
+				// 	notification: {
+				// 		sound: 'test',
+				// 		icon: 'icon'
+				// 	},
+				// },
+				// data: {
+				// 	score: '850',
+				// 	time: '2:45'
+				// },
 				token: subscription.token
 			};
 
 			getMessaging().send(message)
-				.then((response) => {
-					// Response is a message ID string.
-					console.log('Successfully sent message:', response);
-				})
 				.catch((error) => {
 					console.log('Error sending message:', error);
+
+					// TODO Delete token
+					if (error?.errorInfo?.code === 'messaging/registration-token-not-registered') {
+						console.warn('Invalid token', subscription.token);
+					}
 				});
 		});
 	}

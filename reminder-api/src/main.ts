@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import admin, { ServiceAccount } from "firebase-admin";
+import admin from "firebase-admin";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,8 +16,7 @@ async function bootstrap() {
 		credentials: true
 	});
 
-	const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-	console.log(serviceAccount)
+	const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64!, 'base64').toString('utf8'));
 
 	admin.initializeApp({
 		credential: admin.credential.cert(serviceAccount),

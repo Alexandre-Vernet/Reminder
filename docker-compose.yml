@@ -10,14 +10,12 @@ services:
       - PORT=
       - ALLOWED_ORIGIN=
       - JWT_SECRET=
-      - WEB_PUSH_PUBLIC_KEY=
-      - WEB_PUSH_PRIVATE_KEY=
-      - WEB_PUSH_EMAIL=
       - POSTGRES_HOST=
       - POSTGRES_PORT=
       - POSTGRES_USERNAME=
       - POSTGRES_PASSWORD=
       - POSTGRES_DATABASE=
+      - FIREBASE_SERVICE_ACCOUNT_BASE64=
     networks:
       - reminder-network
     ports:
