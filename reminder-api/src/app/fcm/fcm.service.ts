@@ -18,17 +18,18 @@ export class FcmService {
 					title: notification.title,
 					body: notification.description,
 				},
-				// android: {
-				// 	priority: 'high',
-				// 	notification: {
-				// 		sound: 'test',
-				// 		icon: 'icon'
-				// 	},
-				// },
-				// data: {
-				// 	score: '850',
-				// 	time: '2:45'
-				// },
+				android: {
+					priority: 'high',
+					notification: {
+						sound: 'test',
+						channelId: 'id'
+						// icon: 'icon'
+					},
+				},
+				data: {
+					score: '850',
+					time: '2:45'
+				},
 				token: fcmToken.token
 			};
 
