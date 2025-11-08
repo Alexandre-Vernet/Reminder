@@ -9,7 +9,7 @@ import { PushNotifications } from "@capacitor/push-notifications";
 })
 export class FcmTokenService {
 
-  subscriptionUri = environment.subscriptionUri();
+  fcmTokenUri = environment.fcmTokenUri();
 
   constructor(
     private readonly http: HttpClient,
@@ -42,6 +42,6 @@ export class FcmTokenService {
   }
 
   storeToken(fcmTokenDto: FcmTokenDto) {
-    return this.http.post<FcmTokenDto>(this.subscriptionUri, fcmTokenDto);
+    return this.http.post<FcmTokenDto>(this.fcmTokenUri, fcmTokenDto);
   }
 }

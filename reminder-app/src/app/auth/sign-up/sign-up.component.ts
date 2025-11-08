@@ -38,7 +38,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 		this.buttonSubmitForm$.pipe(
 			takeUntil(this.unsubscribe$),
 			filter(() => this.checkForm()),
-			switchMap(() => this.authService.signUp(this.formSignUp.value.email, this.formSignUp.value.password)
+			switchMap(() => this.authService.signUp(this.formSignUp.value.email.toLowerCase(), this.formSignUp.value.password)
 				.pipe(
 					catchError((err) => {
 						this.formSignUp.setErrors({

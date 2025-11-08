@@ -51,7 +51,7 @@ export class SignInComponent implements OnInit {
     this.buttonSubmitForm$.pipe(
       takeUntilDestroyed(this.destroyRef),
       filter(() => this.formSignIn.valid),
-      switchMap(() => this.authService.signIn(this.formSignIn.value.email, this.formSignIn.value.password)
+      switchMap(() => this.authService.signIn(this.formSignIn.value.email.toLowerCase(), this.formSignIn.value.password)
         .pipe(
           catchError((err) => {
             this.formSignIn.setErrors({
