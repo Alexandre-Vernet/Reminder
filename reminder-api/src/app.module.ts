@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationEntity } from './app/notification/notification.entity';
-import { FcmTokenEntity } from './app/fcm-token/fcm-token.entity';
-import { FcmTokenModule } from './app/fcm-token/fcm-token.module';
+import { FcmTokenUserEntity } from './app/fcm-token-user/fcm-token-user.entity';
+import { FcmTokenUserModule } from './app/fcm-token-user/fcm-token-user.module';
 import { AuthModule } from './app/auth/auth.module';
 import { UserEntity } from './app/auth/user.entity';
 import { JwtModule } from '@nestjs/jwt';
@@ -24,7 +24,7 @@ import { FcmModule } from "./app/fcm/fcm.module";
 			username: process.env.POSTGRES_USERNAME,
 			password: process.env.POSTGRES_PASSWORD,
 			database: process.env.POSTGRES_DATABASE,
-			entities: [UserEntity, NotificationEntity, FcmTokenEntity],
+			entities: [UserEntity, NotificationEntity, FcmTokenUserEntity],
 			synchronize: true,
 		}),
 		JwtModule.register({
@@ -32,7 +32,7 @@ import { FcmModule } from "./app/fcm/fcm.module";
 			secret: process.env.JWT_SECRET,
 			signOptions: { expiresIn: '1d' },
 		}),
-		FcmTokenModule,
+		FcmTokenUserModule,
 		AuthModule,
 		NotificationModule,
 		CronModule,

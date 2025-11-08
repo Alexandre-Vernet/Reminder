@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { FcmTokenDto, NotificationDto } from "../interfaces";
 import { getMessaging, Message } from "firebase-admin/messaging";
-import { FcmTokenService } from "../fcm-token/fcm-token.service";
+import { FcmTokenUserService } from "../fcm-token-user/fcm-token-user.service";
 
 @Injectable()
 export class FcmService {
 
 	constructor(
-		private readonly fcmTokenService: FcmTokenService
+		private readonly fcmTokenService: FcmTokenUserService
 	) {
 	}
 

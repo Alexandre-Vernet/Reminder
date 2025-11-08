@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CronService } from "./cron.service";
-import { FcmTokenModule } from "../fcm-token/fcm-token.module";
+import { FcmTokenUserModule } from "../fcm-token-user/fcm-token-user.module";
 import { FcmModule } from "../fcm/fcm.module";
 
 @Module({
-	imports: [FcmTokenModule, FcmModule],
+	imports: [FcmTokenUserModule, FcmModule],
 	providers: [CronService],
 	exports: [CronService]
 })

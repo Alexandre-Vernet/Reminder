@@ -1,12 +1,12 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { FcmTokenEntity } from "./fcm-token.entity";
+import { FcmTokenUserEntity } from "./fcm-token-user.entity";
 import { FcmTokenDto } from "../interfaces";
 
-export class FcmTokenService {
+export class FcmTokenUserService {
 	constructor(
-		@InjectRepository(FcmTokenEntity)
-		private readonly fcmTokenEntityRepository: Repository<FcmTokenEntity>
+		@InjectRepository(FcmTokenUserEntity)
+		private readonly fcmTokenEntityRepository: Repository<FcmTokenUserEntity>
 	) {
 	}
 

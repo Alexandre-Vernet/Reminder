@@ -1,14 +1,14 @@
 import { Body, Controller, Post, UseInterceptors } from "@nestjs/common";
-import { FcmTokenService } from "./fcm-token.service";
+import { FcmTokenUserService } from "./fcm-token-user.service";
 import { AuthInterceptor } from "../auth/auth.interceptor";
 import { FcmTokenDto } from "../interfaces";
 
 @UseInterceptors(AuthInterceptor)
 @Controller('fcm-token')
-export class FcmTokenController {
+export class FcmTokenUserController {
 
 	constructor(
-		private readonly fcmTokenService: FcmTokenService
+		private readonly fcmTokenService: FcmTokenUserService
 	) {
 	}
 

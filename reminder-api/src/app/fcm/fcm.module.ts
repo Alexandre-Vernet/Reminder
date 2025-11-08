@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { FcmService } from './fcm.service';
-import { FcmTokenModule } from "../fcm-token/fcm-token.module";
+import { FcmTokenUserModule } from "../fcm-token-user/fcm-token-user.module";
 
 @Module({
-	imports: [FcmTokenModule],
+	imports: [FcmTokenUserModule],
   providers: [FcmService],
 	exports: [FcmService]
 })

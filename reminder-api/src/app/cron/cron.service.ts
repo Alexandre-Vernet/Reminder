@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { CronJob } from "cron";
-import { FcmTokenService } from "../fcm-token/fcm-token.service";
+import { FcmTokenUserService } from "../fcm-token-user/fcm-token-user.service";
 import { NotificationDto } from "../interfaces";
 import { FcmService } from "../fcm/fcm.service";
 
@@ -10,7 +10,7 @@ export class CronService {
 
 	constructor(
 		private schedulerRegistry: SchedulerRegistry,
-		private readonly subscriptionService: FcmTokenService,
+		private readonly subscriptionService: FcmTokenUserService,
 		private readonly fcmService: FcmService
 	) {
 	}

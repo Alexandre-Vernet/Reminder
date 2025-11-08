@@ -1,8 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../auth/user.entity";
 
-@Entity('fcm_token', { schema: 'public' })
-export class FcmTokenEntity {
+@Entity('fcm-token_user', { schema: 'public' })
+export class FcmTokenUserEntity {
 	@PrimaryGeneratedColumn('increment')
 	id: number;
 
