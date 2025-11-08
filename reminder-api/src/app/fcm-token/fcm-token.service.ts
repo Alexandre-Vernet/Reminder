@@ -38,4 +38,14 @@ export class FcmTokenService {
 			token: fcmToken.token,
 		});
 	}
+
+	async delete(fcmToken: string) {
+		const fcmTokenDelete = await this.fcmTokenEntityRepository.findOne({
+			where: {
+				token: fcmToken
+			}
+		});
+
+		return this.fcmTokenEntityRepository.delete(fcmTokenDelete.id);
+	}
 }

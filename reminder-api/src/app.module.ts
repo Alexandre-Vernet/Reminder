@@ -11,6 +11,7 @@ import { NotificationModule } from './app/notification/notification.module';
 import { CronModule } from './app/cron/cron.module';
 import { ConfigModule } from "@nestjs/config";
 import { RootModule } from "./app/root/root.module";
+import { FcmModule } from "./app/fcm/fcm.module";
 
 @Module({
 	imports: [
@@ -35,7 +36,8 @@ import { RootModule } from "./app/root/root.module";
 		AuthModule,
 		NotificationModule,
 		CronModule,
-		RootModule
+		RootModule,
+		FcmModule
 	],
 })
 export class AppModule {

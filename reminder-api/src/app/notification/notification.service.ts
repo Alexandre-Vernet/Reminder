@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, In, Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { NotificationEntity } from "./notification.entity";
 import { CronService } from "../cron/cron.service";
 import { NotificationDto, UserDto } from "../interfaces";
@@ -80,14 +80,13 @@ export class NotificationService implements OnModuleInit {
 	}
 
 	findAllByUserId(userId: number) {
-		const options: FindManyOptions = {
+		return this.notificationRepository.find({
 			where: {
 				user: {
 					id: userId
 				}
 			}
-		}
-		return this.notificationRepository.find(options);
+		});
 	}
 
 	async update(notificationId: number, notification: NotificationDto) {

@@ -3,7 +3,7 @@ import { SchedulerRegistry } from "@nestjs/schedule";
 import { CronJob } from "cron";
 import { FcmTokenService } from "../fcm-token/fcm-token.service";
 import { NotificationDto } from "../interfaces";
-import { getMessaging, Message } from "firebase-admin/messaging";
+import { FcmService } from "../fcm/fcm.service";
 
 @Injectable()
 export class CronService {
@@ -11,6 +11,7 @@ export class CronService {
 	constructor(
 		private schedulerRegistry: SchedulerRegistry,
 		private readonly subscriptionService: FcmTokenService,
+		private readonly fcmService: FcmService
 	) {
 	}
 
@@ -36,36 +37,6 @@ export class CronService {
 
 	async sendNotification(notification: NotificationDto) {
 		const fcmTokens = await this.subscriptionService.findTokenByUserId(notification.user.id);
-
-		fcmTokens.map(async (subscription) => {
-			const message: Message = {
-				notification: {
-					title: notification.title,
-					body: notification.description,
-				},
-				// android: {
-				// 	priority: 'high',
-				// 	notification: {
-				// 		sound: 'test',
-				// 		icon: 'icon'
-				// 	},
-				// },
-				// data: {
-				// 	score: '850',
-				// 	time: '2:45'
-				// },
-				token: subscription.token
-			};
-
-			getMessaging().send(message)
-				.catch((error) => {
-					console.log('Error sending message:', error);
-
-					// TODO Delete token
-					if (error?.errorInfo?.code === 'messaging/registration-token-not-registered') {
-						console.warn('Invalid token', subscription.token);
-					}
-				});
-		});
+		this.fcmService.sendNotification(fcmTokens, notification);
 	}
 }
