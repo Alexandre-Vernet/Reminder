@@ -14,6 +14,10 @@ env:
   SERVER_USERNAME: ${{ secrets.SERVER_USERNAME }}
   SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
   SERVER_PORT: ${{ secrets.SERVER_PORT }}
+  KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+  KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+  KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
 jobs:
   build-push-images:
@@ -74,7 +78,7 @@ jobs:
               cd /home/debian/apps/${{ env.DOCKERHUB_REPOSITORY_NAME }}/
               docker-compose up -d
 
-  build-unsigned-apk:
+  build-signed-apk:
     needs: redeploy-containers
     runs-on: ubuntu-latest
     environment: production
@@ -107,14 +111,35 @@ jobs:
       - name: Make gradlew executable
         run: cd ${{ env.APP_NAME }}/android && chmod +x gradlew
 
-      - name: Build debug APK
+      - name: Decode keystore
+        run: echo "${{ env.KEYSTORE_BASE64 }}" | base64 --decode > ${{ env.APP_NAME }}/android/app/my-release-key.keystore
+
+      - name: Build signed release APK
         run: |
           cd ${{ env.APP_NAME }}/android
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=$PWD/app/my-release-key.keystore \
+            -Pandroid.injected.signing.store.password=${{ env.KEY_STORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ env.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ env.KEY_PASSWORD }}
 
+      - name: Build signed release AAB
+        run: |
+          cd ${{ env.APP_NAME }}/android
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=$PWD/app/my-release-key.keystore \
+            -Pandroid.injected.signing.store.password=${{ env.KEY_STORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ env.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ env.KEY_PASSWORD }}
 
       - name: Upload signed APK
         uses: actions/upload-artifact@v4
         with:
-          name: android-debug-apk
-          path: ${{ env.APP_NAME }}/android/app/build/outputs/apk/debug/app-debug.apk
+          name: android-release-signed-apk
+          path: ${{ env.APP_NAME }}/android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload signed AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-signed-aab
+          path: ${{ env.APP_NAME }}/android/app/build/outputs/bundle/release/app-release.aab
